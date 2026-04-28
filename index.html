@@ -1256,7 +1256,7 @@ body { font-family: "DM Sans", sans-serif; background: var(--paper); color: var(
 <!-- TAB 14: FIELD & STUDIO ROUTINES -->
 <div class="panel wide" id="tab-routines">
 <style>
-/* ── Routines tab — scoped to #tab-routines ── */
+/* Routines tab — scoped to #tab-routines */
 #tab-routines {
   font-family: 'Inter Tight', sans-serif;
   background: #f4f0e6;
@@ -1365,7 +1365,7 @@ body { font-family: "DM Sans", sans-serif; background: var(--paper); color: var(
 #tab-routines .phase-body strong { font-weight: 600; }
 #tab-routines .checklist { list-style: none; padding: 0; margin: 8px 0; }
 #tab-routines .checklist li { position: relative; padding-left: 22px; margin-bottom: 6px; font-size: 13.5px; line-height: 1.5; }
-#tab-routines .checklist li::before { content: '□'; position: absolute; left: 0; top: -1px; font-size: 16px; color: #8a8472; font-family: 'JetBrains Mono','DM Mono',monospace; }
+#tab-routines .checklist li::before { content: "□"; position: absolute; left: 0; top: -1px; font-size: 16px; color: #8a8472; font-family: 'JetBrains Mono','DM Mono',monospace; }
 #tab-routines .checklist.tight li { margin-bottom: 3px; }
 #tab-routines .pull { margin: 10px 0; padding: 10px 14px; background: #ebe4d2; border-left: 2px solid #b8852a; font-family: 'Cormorant Garamond',Georgia,serif; font-style: italic; font-size: 14px; color: #4a463c; }
 #tab-routines .tools-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 0; border: 1px solid #c8bfa8; border-top: none; background: #ebe4d2; }
@@ -1390,7 +1390,7 @@ body { font-family: "DM Sans", sans-serif; background: var(--paper); color: var(
 #tab-routines .ref-card-body p { margin-bottom: 8px; }
 #tab-routines .ref-card-body ul { list-style: none; margin-top: 6px; }
 #tab-routines .ref-card-body li { padding-left: 14px; position: relative; margin-bottom: 4px; }
-#tab-routines .ref-card-body li::before { content: '—'; position: absolute; left: 0; color: #8a8472; }
+#tab-routines .ref-card-body li::before { content: "4"; position: absolute; left: 0; color: #8a8472; }
 #tab-routines .clock-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
 #tab-routines .clock-table th { text-align: left; font-family: 'JetBrains Mono','DM Mono',monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #8a8472; padding: 6px 8px 6px 0; border-bottom: 1px solid #c8bfa8; font-weight: 500; }
 #tab-routines .clock-table td { padding: 7px 8px 7px 0; border-bottom: 1px dotted #c8bfa8; vertical-align: top; }
@@ -1405,11 +1405,11 @@ body { font-family: "DM Sans", sans-serif; background: var(--paper); color: var(
   <header class="masthead">
     <div class="masthead-title">The <em>Field</em><br>&amp; the <em>Studio</em></div>
     <div class="masthead-meta">Watercolor Reference<br>Edition I &middot; 2026<br>Ryan's Working Practice</div>
-    <div class="masthead-sub">Two parallel routines, drawn from the masters and disciplined by the Fairview Finder. The field protocol forces decision-making before the brush moves. The studio protocol exchanges urgency for depth — same skeleton, longer phases, more iteration.</div>
+    <div class="masthead-sub">Two parallel routines, drawn from the masters and disciplined by the Fairview Finder. The field protocol forces decision-making before the brush moves. The studio protocol exchanges urgency for depth &#8212; same skeleton, longer phases, more iteration.</div>
   </header>
 
   <div class="howto">
-    <strong>How to use:</strong> Don't run both routines on the same painting. Pick one based on context. Both follow the same six-phase backbone — Observe, Notan, Draw, Wash, Accents, Assess — because the masters' framework doesn't change between bench and easel. What changes is timing, brush load, and how many iterations you allow yourself before commitment. Keep this reference within reach. Mark it up. Replace what doesn't survive contact with reality.
+    <strong>How to use:</strong> Don't run both routines on the same painting. Pick one based on context. Both follow the same six-phase backbone &#8212; Observe, Notan, Draw, Wash, Accents, Assess &#8212; because the masters' framework doesn't change between bench and easel. What changes is timing, brush load, and how many iterations you allow yourself before commitment. Keep this reference within reach. Mark it up. Replace what doesn't survive contact with reality.
   </div>
 
   <div class="routines">
@@ -1418,28 +1418,38 @@ body { font-family: "DM Sans", sans-serif; background: var(--paper); color: var(
       <div class="routine-header">
         <div class="routine-eyebrow">Routine I &middot; On Location</div>
         <div class="routine-title">The Field Protocol</div>
-        <div class="routine-tagline">42–53 minutes. One painting per session, executed honestly. Constraint forces decision.</div>
+        <div class="routine-tagline">42&#8211;53 minutes. One painting per session, executed honestly. Constraint forces decision.</div>
       </div>
+
       <div class="phase">
-        <div class="phase-head"><span class="phase-num">I.</span><span class="phase-title">Arrive &amp; Wonder</span><span class="phase-time">10 min · no tools</span></div>
+        <div class="phase-head">
+          <span class="phase-num">I.</span>
+          <span class="phase-title">Arrive &amp; Wonder</span>
+          <span class="phase-time">10 min &middot; no tools</span>
+        </div>
         <div class="phase-intent">Walk before you sketch. Pause, breathe, and ask what's actually here.</div>
         <div class="phase-body">
           <p><strong>Three questions, in order:</strong></p>
           <ol class="checklist">
             <li>What is the light doing? Where is it coming from? How long until it shifts? If less than 45 min of stable light, paint it as it <em>is</em>, not as it might become.</li>
-            <li>What is the one thing? (Whitney's hero — Fairview's Hero prompt.) Name it before drawing. If you can't, you'll paint everything equally and lose the painting.</li>
+            <li>What is the one thing? (Whitney's hero &#8212; Fairview's Hero prompt.) Name it before drawing. If you can't, you'll paint everything equally and lose the painting.</li>
             <li>What is the mood? Assign temperature (warm or cool dominance) and direction (horizontal / vertical / oblique). Declared before sketching.</li>
           </ol>
-          <div class="pull">"What's alive here?" — not what's pretty, what has tension. That's where the painting lives.</div>
+          <div class="pull">&#8220;What's alive here?&#8221; &#8212; not what's pretty, what has tension. That's where the painting lives.</div>
         </div>
       </div>
+
       <div class="phase">
-        <div class="phase-head"><span class="phase-num">II.</span><span class="phase-title">Notan + Significant Words</span><span class="phase-time">5 min</span></div>
+        <div class="phase-head">
+          <span class="phase-num">II.</span>
+          <span class="phase-title">Notan + Significant Words</span>
+          <span class="phase-time">5 min</span>
+        </div>
         <div class="phase-intent">Solve the design before touching good paper. Translate, don't transcribe.</div>
         <div class="phase-body">
-          <p><strong>Use the Fairview Finder first.</strong> Pick the window matching your panel. Test 2–3 crops. Apply Golden Ratio marks (treat as off-center placement aid — the rule of thirds works for the same reason).</p>
-          <p><strong>Then write 3–5 significant words</strong> in the corner of the page. Concept, not inventory. "Heavy light, warm stone, cool shadow pattern" — not "buildings, trees, sky."</p>
-          <p><strong>Then the notan.</strong> 2×3 inches, three values only: white paper, mid-gray, dark. Diluted Payne's Gray or Burnt Umber. No color. No detail.</p>
+          <p><strong>Use the Fairview Finder first.</strong> Pick the window matching your panel. Test 2&#8211;3 crops. Apply Golden Ratio marks (treat as off-center placement aid &#8212; the rule of thirds works for the same reason).</p>
+          <p><strong>Then write 3&#8211;5 significant words</strong> in the corner of the page. Concept, not inventory. &#8220;Heavy light, warm stone, cool shadow pattern&#8221; &#8212; not &#8220;buildings, trees, sky.&#8221;</p>
+          <p><strong>Then the notan.</strong> 2&#215;3 inches, three values only: white paper, mid-gray, dark. Diluted Payne's Gray or Burnt Umber. No color. No detail.</p>
           <ul class="checklist tight">
             <li>Dark pattern reads as a clear, connected shape?</li>
             <li>Whites concentrated, not scattered?</li>
@@ -1449,39 +1459,59 @@ body { font-family: "DM Sans", sans-serif; background: var(--paper); color: var(
           <p>If the thumbnail looks weak, <strong>reframe</strong>. Don't paint a bad composition hoping it'll resolve.</p>
         </div>
       </div>
+
       <div class="phase">
-        <div class="phase-head"><span class="phase-num">III.</span><span class="phase-title">Minimal Drawing</span><span class="phase-time">5–8 min</span></div>
+        <div class="phase-head">
+          <span class="phase-num">III.</span>
+          <span class="phase-title">Minimal Drawing</span>
+          <span class="phase-time">5&#8211;8 min</span>
+        </div>
         <div class="phase-intent">Map zones, not edges. Pencil disappears under paint.</div>
         <div class="phase-body">
           <p>2H pencil or harder. Horizon and dominant vanishing points first. Mark them even if off the page.</p>
-          <p>Reid: large shapes, not edges of things. Leave faces, foliage texture, secondary detail out — those resolve with the brush.</p>
+          <p>Reid: large shapes, not edges of things. Leave faces, foliage texture, secondary detail out &#8212; those resolve with the brush.</p>
           <p><strong>Do not draw shadows.</strong> Shadows are painted, not drawn.</p>
         </div>
       </div>
+
       <div class="phase">
-        <div class="phase-head"><span class="phase-num">IV.</span><span class="phase-title">Wet Wash Commitment</span><span class="phase-time">15–20 min</span></div>
+        <div class="phase-head">
+          <span class="phase-num">IV.</span>
+          <span class="phase-title">Wet Wash Commitment</span>
+          <span class="phase-time">15&#8211;20 min</span>
+        </div>
         <div class="phase-intent">Largest to smallest. Lightest to darkest. No exceptions.</div>
         <div class="phase-body">
-          <p><strong>Before each major wash, say the consistency aloud</strong> — Tea, Coffee, Milk, Cream. Forces conscious decision. Stops reflexive dipping.</p>
-          <p><strong>Wash 1 — sky &amp; light areas</strong> (Milk to Cream). Sets temperature key. Warm dominance: Cobalt Blue Light + breath of Yellow Ochre or Quin Gold. Cool: push toward Cerulean Chromium or Phthalo Blue RS.</p>
-          <p><strong>Wash 2 — mid-value masses</strong> (Milk). Architectural walls, distant foliage, midground. Connect shapes. Lose edges into each other while wet.</p>
-          <p><strong>Wash 3 — shadow shapes</strong> (Cream). One coherent color, not many. Sargent &amp; Reid: shadows in the same light source are the same family. French Ultramarine + Burnt Sienna, biased warm or cool. <strong>Mix the full puddle before you start.</strong></p>
+          <p><strong>Before each major wash, say the consistency aloud</strong> &#8212; Tea, Coffee, Milk, Cream. Forces conscious decision. Stops reflexive dipping.</p>
+          <p><strong>Wash 1 &#8212; sky &amp; light areas</strong> (Milk to Cream). Sets temperature key. Warm dominance: Cobalt Blue Light + breath of Yellow Ochre or Quin Gold. Cool: push toward Cerulean Chromium or Phthalo Blue RS.</p>
+          <p><strong>Wash 2 &#8212; mid-value masses</strong> (Milk). Architectural walls, distant foliage, midground. Connect shapes. Lose edges into each other while wet.</p>
+          <p><strong>Wash 3 &#8212; shadow shapes</strong> (Cream). One coherent color, not many. Sargent &amp; Reid: shadows in the same light source are the same family. French Ultramarine + Burnt Sienna, biased warm or cool. <strong>Mix the full puddle before you start.</strong></p>
           <div class="pull">Don't touch a drying wash. Horadam's gum arabic concentration means lifting attempts destroy the surface. Place it and leave it.</div>
-          <p><strong>Look at the subject longer than the paper.</strong> 60/40 attention ratio. When anxiety creeps in, you've flipped it — that's the cue to look up.</p>
+          <p><strong>Look at the subject longer than the paper.</strong> 60/40 attention ratio. When anxiety creeps in, you've flipped it &#8212; that's the cue to look up.</p>
         </div>
       </div>
+
       <div class="phase">
-        <div class="phase-head"><span class="phase-num">V.</span><span class="phase-title">Accents &amp; Edges</span><span class="phase-time">5–8 min</span></div>
+        <div class="phase-head">
+          <span class="phase-num">V.</span>
+          <span class="phase-title">Accents &amp; Edges</span>
+          <span class="phase-time">5&#8211;8 min</span>
+        </div>
         <div class="phase-intent">Sargent's accents. Few, deliberate, authoritative.</div>
         <div class="phase-body">
           <p>Butter consistency. Doorways, window depths, cast shadow edges, figures.</p>
           <p><strong>Count your accents.</strong> More than a dozen significant darks and each one loses authority.</p>
-          <p><strong>Edge hierarchy.</strong> Hard edges only at the focal zone. Damp brush dragged along a dried edge dissolves it. Foreground hard → midground broken → background lost.</p>
+          <p><strong>Edge hierarchy.</strong> Hard edges only at the focal zone. Damp brush dragged along a dried edge dissolves it. This is where the painting gets air. Foreground hard &#8594; midground broken &#8594; background lost.</p>
           <p><strong>Figures last.</strong> Two strokes for head and hat, three for body, one for shadow under feet. Correct scale, correct value, shadow anchor. Reid: gesture over anatomy.</p>
         </div>
       </div>
+
       <div class="phase">
-        <div class="phase-head"><span class="phase-num">VI.</span><span class="phase-title">Stop &amp; Note</span><span class="phase-time">2 min · brush down</span></div>
+        <div class="phase-head">
+          <span class="phase-num">VI.</span>
+          <span class="phase-title">Stop &amp; Note</span>
+          <span class="phase-time">2 min &middot; brush down</span>
+        </div>
         <div class="phase-intent">Step back an arm's length. Judge against intent, not scene.</div>
         <div class="phase-body">
           <ul class="checklist tight">
@@ -1491,114 +1521,148 @@ body { font-family: "DM Sans", sans-serif; background: var(--paper); color: var(
             <li>Did the painting translate the words, or transcribe the inventory?</li>
           </ul>
           <p>Yes to all = the painting works regardless of execution roughness. Rough edges and blooms are honest field marks, not failures.</p>
-          <p>If no: name which decision broke (composition, value key, or temperature drift). Write it in a small note. Pattern recognition over time.</p>
+          <p>If no: name which decision broke (composition, value key, or temperature drift). Write it in a small note. Pattern recognition over time. You make the same two or three errors repeatedly &#8212; those are your real problems to solve.</p>
         </div>
       </div>
+
     </section>
 
     <section class="routine studio">
       <div class="routine-header">
         <div class="routine-eyebrow">Routine II &middot; In the Studio</div>
         <div class="routine-title">The Studio Protocol</div>
-        <div class="routine-tagline">90–180 minutes. Same skeleton. Longer phases, more iteration, deeper revision.</div>
+        <div class="routine-tagline">90&#8211;180 minutes. Same skeleton. Longer phases, more iteration, deeper revision.</div>
       </div>
+
       <div class="phase">
-        <div class="phase-head"><span class="phase-num">I.</span><span class="phase-title">Reference Selection &amp; Wonder</span><span class="phase-time">15–25 min</span></div>
+        <div class="phase-head">
+          <span class="phase-num">I.</span>
+          <span class="phase-title">Reference Selection &amp; Wonder</span>
+          <span class="phase-time">15&#8211;25 min</span>
+        </div>
         <div class="phase-intent">The studio risk: copying the photo instead of designing the painting.</div>
         <div class="phase-body">
-          <p><strong>Reference review.</strong> If working from photos, lay out 3+ references. Reject any with blown highlights or no shadow info — root cause of most studio failures is upstream reference selection.</p>
+          <p><strong>Reference review.</strong> If working from photos, lay out 3+ references. Reject any with blown highlights or no shadow info &#8212; root cause of most studio failures is upstream reference selection.</p>
           <p><strong>Same three questions</strong> (light / hero / mood). The difference: in the studio you can <em>change</em> the light. Decide whether you're painting it as photographed or recasting it.</p>
-          <p><strong>Significant words: 3–5 again.</strong> Studio adds a concept layer — pick a Design-for-Intent pairing. Farewell → opening diagonals, receding scale, thinning light. Awe → vast masses, tiny human notes, towering value shifts. Name the feeling, then build to it.</p>
+          <p><strong>Imagination over mind</strong> (O'Donohue). The mind says &#8220;field, fence, tree.&#8221; The imagination finds what's actually there. Five minutes with a quick value sketch usually reveals it.</p>
+          <p><strong>Significant words: 3&#8211;5 again.</strong> Studio adds a concept layer &#8212; pick a Design-for-Intent pairing. Farewell &#8594; opening diagonals, receding scale, thinning light. Awe &#8594; vast masses, tiny human notes, towering value shifts. Name the feeling, then build to it.</p>
         </div>
       </div>
+
       <div class="phase">
-        <div class="phase-head"><span class="phase-num">II.</span><span class="phase-title">Multiple Notans &amp; Compositional Choice</span><span class="phase-time">15–25 min</span></div>
+        <div class="phase-head">
+          <span class="phase-num">II.</span>
+          <span class="phase-title">Multiple Notans &amp; Compositional Choice</span>
+          <span class="phase-time">15&#8211;25 min</span>
+        </div>
         <div class="phase-intent">In the field, one thumbnail. In the studio, three. Pick the strongest before drawing.</div>
         <div class="phase-body">
-          <p><strong>Three notans, three crops.</strong> Use the Fairview Finder to test crops on the reference. Each thumbnail commits to a different composition type.</p>
+          <p><strong>Three notans, three crops.</strong> Use the Fairview Finder to test crops on the reference. Each thumbnail commits to a different composition type &#8212; Triangle, Offset, Three Beats, S-Curve, Tunnel, etc. Pick the one that best serves the words.</p>
+          <p><strong>Test against pitfalls</strong> for the chosen composition type:</p>
           <ul class="checklist tight">
-            <li>Triangle → static pyramid? Tilt the apex.</li>
-            <li>Offset → see-saw? Adjust counterweight via value, not size.</li>
-            <li>S-Curve → rollercoaster? Soften the zig.</li>
-            <li>Tunnel → empty payoff? Put something at the end.</li>
-            <li>Diagonal → ejecting the eye? Block the corner exit.</li>
+            <li>Triangle &#8594; static pyramid? Tilt the apex.</li>
+            <li>Offset &#8594; see-saw? Adjust counterweight via value, not size.</li>
+            <li>S-Curve &#8594; rollercoaster? Soften the zig.</li>
+            <li>Tunnel &#8594; empty payoff? Put something at the end.</li>
+            <li>Diagonal &#8594; ejecting the eye? Block the corner exit.</li>
           </ul>
           <p><strong>Mother Color decided here.</strong> Quin Gold (warm), French Ultramarine (cool), Burnt Sienna (earthy unity), Quin Rose (dawn/storm). Trace amounts go into every wash later.</p>
-          <p><strong>Ten-foot test.</strong> Pin the chosen notan to the wall, walk back. If it doesn't read at 10 feet in three values, simplify before you start — not after.</p>
+          <p><strong>Ten-foot test.</strong> Pin the chosen notan to the wall, walk back. If it doesn't read at 10 feet in three values, simplify before you start the painting &#8212; not after.</p>
         </div>
       </div>
+
       <div class="phase">
-        <div class="phase-head"><span class="phase-num">III.</span><span class="phase-title">Considered Drawing</span><span class="phase-time">15–30 min</span></div>
+        <div class="phase-head">
+          <span class="phase-num">III.</span>
+          <span class="phase-title">Considered Drawing</span>
+          <span class="phase-time">15&#8211;30 min</span>
+        </div>
         <div class="phase-intent">More accuracy than the field allows. Same restraint about what gets drawn.</div>
         <div class="phase-body">
           <p>2H pencil. Refine perspective and proportion. Use a proportional divider or grid if the architecture demands it.</p>
-          <p><strong>Still no shadows drawn.</strong> Still no faces, foliage texture, or secondary detail.</p>
-          <p><strong>Pre-painting accumulation</strong> (Wood). Full puddles ready before brush touches paper: shadow mix, sky mix, mid-value mix. Mix more than you think you need.</p>
+          <p><strong>Still no shadows drawn.</strong> Still no faces, foliage texture, or secondary detail. The discipline is identical to field &#8212; the studio just gives you more time to be accurate about the bones.</p>
+          <p><strong>Pre-painting accumulation</strong> (Wood). Have your full puddles ready before brush touches paper: shadow mix, sky mix, mid-value mix. Mix more than you think you need.</p>
         </div>
       </div>
+
       <div class="phase">
-        <div class="phase-head"><span class="phase-num">IV.</span><span class="phase-title">Layered Wash Build</span><span class="phase-time">30–60 min</span></div>
+        <div class="phase-head">
+          <span class="phase-num">IV.</span>
+          <span class="phase-title">Layered Wash Build</span>
+          <span class="phase-time">30&#8211;60 min</span>
+        </div>
         <div class="phase-intent">Wood's three-phase structure. Glaze first, structured middle values, accents last.</div>
         <div class="phase-body">
-          <p><strong>Glaze 1 — abstract underpainting</strong> (Tea to Coffee). Wood's method: an overall warm or cool glaze setting the temperature key. Mother Color whispers here.</p>
-          <p><strong>Glaze 2 — structured middle values</strong> (Milk). Connect mid-value masses. Wait for full drying between layers — glaze a second mid-value pass without disturbing the first.</p>
-          <p><strong>Glaze 3 — shadow architecture</strong> (Cream). Single coherent shadow color. Temperature gradient inside the shadow (O'Hara): warm toward the light source side, cool toward the shadow's edge.</p>
-          <p><strong>Drying breaks are real work.</strong> Step back, assess against the notan and the words. If the painting has drifted from intent, identify what broke <em>now</em> — before the next layer locks it in.</p>
-          <div class="pull">"Identify what you don't like before you can fix it." — Schmid. The studio reward is having time to actually do this.</div>
+          <p><strong>Glaze 1 &#8212; abstract underpainting</strong> (Tea to Coffee). Wood's method: an overall warm or cool glaze setting the temperature key across the whole sheet. Mother Color whispers here.</p>
+          <p><strong>Glaze 2 &#8212; structured middle values</strong> (Milk). Connect mid-value masses. This is where the studio diverges from the field &#8212; you can wait for full drying between layers and glaze a second mid-value pass without disturbing the first. Field paintings rarely allow this.</p>
+          <p><strong>Glaze 3 &#8212; shadow architecture</strong> (Cream). Single coherent shadow color. Temperature gradient inside the shadow (O'Hara): warm toward the light source side, cool toward the shadow's edge.</p>
+          <p><strong>Drying breaks are real work.</strong> Don't fill them with fussing. Step back, assess against the notan and the words. If the painting has drifted from intent, identify what broke <em>now</em> &#8212; before the next layer locks it in.</p>
+          <div class="pull">&#8220;Identify what you don't like before you can fix it.&#8221; &#8212; Schmid. The studio reward is having time to actually do this.</div>
         </div>
       </div>
+
       <div class="phase">
-        <div class="phase-head"><span class="phase-num">V.</span><span class="phase-title">Accents, Edges, Atmospheric Tuning</span><span class="phase-time">15–30 min</span></div>
+        <div class="phase-head">
+          <span class="phase-num">V.</span>
+          <span class="phase-title">Accents, Edges, Atmospheric Tuning</span>
+          <span class="phase-time">15&#8211;30 min</span>
+        </div>
         <div class="phase-intent">Same Sargent discipline. More opportunity to refine without overworking.</div>
         <div class="phase-body">
           <p><strong>Butter consistency darks.</strong> Count them. Same dozen-or-fewer rule applies in the studio.</p>
           <p><strong>Edge audit.</strong> Reid's check: are all edges the same? Then edges are doing nothing. Hard at focal, broken at midground, lost at background.</p>
-          <p><strong>Atmospheric anchoring</strong> (O'Hara). Distant darks lighter than close darks. Distant lights darker than close lights. Check explicitly before declaring the painting done.</p>
-          <p><strong>The temptation here is to keep going.</strong> Set a stop rule before starting Phase V and honor it.</p>
+          <p><strong>Atmospheric anchoring</strong> (O'Hara). Distant darks should be lighter than close darks. Distant lights should be darker than close lights. Check this explicitly before declaring the painting done.</p>
+          <p><strong>The temptation here is to keep going.</strong> Studio time is unlimited; the painting is not. Set a stop rule before starting Phase V and honor it.</p>
         </div>
       </div>
+
       <div class="phase">
-        <div class="phase-head"><span class="phase-num">VI.</span><span class="phase-title">Rest, Re-evaluate, Title</span><span class="phase-time">overnight + 15 min</span></div>
+        <div class="phase-head">
+          <span class="phase-num">VI.</span>
+          <span class="phase-title">Rest, Re-evaluate, Title</span>
+          <span class="phase-time">overnight + 15 min</span>
+        </div>
         <div class="phase-intent">Wendie Kause: 5 minutes, 5 feet, 5 hours, 5 days. Studio uses the longer scales.</div>
         <div class="phase-body">
-          <p><strong>Rest the painting overnight minimum.</strong> Titian turned paintings to the wall for months. You need separation from the heat of execution.</p>
+          <p><strong>Rest the painting overnight minimum.</strong> Titian turned paintings to the wall for months. You don't need months &#8212; you need separation from the heat of execution.</p>
+          <p><strong>Next-day audit.</strong> Same questions as the field protocol &#8212; does the notan hold, one clear focal, temperature dominance survived, words translated. Plus two studio-specific:</p>
           <ul class="checklist tight">
             <li>Does it work at 10 feet (impact) AND reward at 2 feet (nuance)?</li>
-            <li>Did I confuse "more" with "better" anywhere?</li>
-            <li>Does the notan still hold? One clear focal? Temperature dominance survived? Words translated?</li>
+            <li>Did I confuse &#8220;more&#8221; with &#8220;better&#8221; anywhere?</li>
           </ul>
-          <p><strong>Title the work deliberately.</strong> Symbolic, Metaphorical, Poetic, Narrative, Sensory, Time-Specific. The title extends the painting's intent.</p>
-          <p><strong>Lesson log entry.</strong> One sentence on what you learned.</p>
+          <p><strong>Title the work.</strong> Choose deliberately from the title categories &#8212; Symbolic, Metaphorical, Poetic, Narrative, Sensory, Time-Specific, etc. The title extends the painting's intent. A weak title weakens the work; a considered one anchors it.</p>
+          <p><strong>Lesson log entry.</strong> One sentence on what you learned. Studio paintings carry lesson weight that field paintings can't &#8212; they're slower, more deliberate, more debugged. Don't waste the lesson.</p>
         </div>
       </div>
+
     </section>
   </div>
 
   <div class="tools-row">
     <div class="tools-block">
-      <div class="tools-head">Field Kit · Carry Only These</div>
+      <div class="tools-head">Field Kit &middot; Carry Only These</div>
       <ul class="tools-list">
         <li><strong>Sketchbook</strong> + scrap paper for thumbnail <em>(not your good paper)</em></li>
-        <li><strong>2H pencil</strong> — disappears under paint</li>
-        <li><strong>Primary 18 palette only.</strong> Constraint forces decision. Leave secondary 24 and tertiary 14 at home unless declared reason.</li>
-        <li><strong>Fairview Finder</strong> on a lanyard — front for design, back for story prompts</li>
-        <li><strong>Three brushes max:</strong> Princeton Aqua Elite size 12–14 round, size 8 round, size 4 round or rigger</li>
-        <li><strong>Two water containers</strong> — one for darks, one for clean wash work</li>
-        <li><strong>Paper towel or rag</strong> — never tissue (leaves fibers)</li>
-        <li><strong>Camp stool, 6–8" low</strong> (O'Hara): pad between feet, lean forward, back to sun</li>
+        <li><strong>2H pencil</strong> &#8212; disappears under paint</li>
+        <li><strong>Primary 18 palette only.</strong> Constraint forces decision. Leave the secondary 24 and tertiary 14 at home unless declared reason.</li>
+        <li><strong>Fairview Finder</strong> on a lanyard &#8212; front for design, back for story prompts</li>
+        <li><strong>Three brushes max:</strong> Princeton Aqua Elite size 12&#8211;14 round, size 8 round, size 4 round or rigger</li>
+        <li><strong>Two water containers</strong> &#8212; one for darks, one for clean wash work</li>
+        <li><strong>Paper towel or rag</strong> &#8212; never tissue (leaves fibers)</li>
+        <li><strong>Camp stool, 6&#8211;8&#8220; low</strong> (O'Hara): pad between feet, lean forward, back to sun</li>
       </ul>
     </div>
     <div class="tools-block">
-      <div class="tools-head">Studio Kit · Slower, Wider</div>
+      <div class="tools-head">Studio Kit &middot; Slower, Wider</div>
       <ul class="tools-list">
         <li><strong>All three palettes accessible.</strong> Primary as default; secondary 24 for unmixable colors; tertiary 14 for atmospheric/granulating sessions.</li>
         <li><strong>Pencils:</strong> 2H for structure, 4H for refinement, kneaded eraser</li>
-        <li><strong>Full brush kit</strong> — Aqua Elite rounds 4/8/10/12, ¾" and 1" flats, 3/8" Dagger Striper, 1.5" Neptune Mottler, 2" Mandalay hake for drills, short-cut bristle for scrubbing</li>
-        <li><strong>Multiple water containers</strong> — clean / mid / dark separation</li>
-        <li><strong>Drying rack or fan</strong> — controlled drying between glazes</li>
+        <li><strong>Full brush kit</strong> &#8212; Aqua Elite rounds 4/8/10/12, &#190;&#8221; and 1&#8221; flats, 3/8&#8221; Dagger Striper, 1.5&#8221; Neptune Mottler, 2&#8221; Mandalay hake for drills, short-cut bristle for scrubbing</li>
+        <li><strong>Multiple water containers</strong> &#8212; clean / mid / dark separation</li>
+        <li><strong>Drying rack or fan</strong> &#8212; controlled drying between glazes</li>
         <li><strong>Mister</strong> for re-wetting passages</li>
-        <li><strong>Reference setup</strong> — angled stand, multiple references visible at once, NOT directly on the painting</li>
-        <li><strong>Standing easel + stool</strong> — alternate seated and standing</li>
+        <li><strong>Reference setup</strong> &#8212; angled stand, multiple references visible at once, NOT directly on the painting</li>
+        <li><strong>Standing easel + stool</strong> &#8212; alternate seated and standing; Sommer: &#8220;you can tell from a painting if the painter was sitting or standing&#8221;</li>
       </ul>
     </div>
   </div>
@@ -1614,10 +1678,10 @@ body { font-family: "DM Sans", sans-serif; background: var(--paper); color: var(
           <thead><tr><th>Term</th><th>Alt</th><th>Use</th></tr></thead>
           <tbody>
             <tr><td>Tea</td><td>Watery</td><td>Lightest wash, mist, sky gradations, first wet washes on damp paper</td></tr>
-            <tr><td>Coffee</td><td>—</td><td>Quarter-tone. Bright transparent color, most background work</td></tr>
+            <tr><td>Coffee</td><td>&#8212;</td><td>Quarter-tone. Bright transparent color, most background work</td></tr>
             <tr><td>Milk</td><td>Juicy</td><td>Half-tone. Most-used. Granulating effects, midground architecture</td></tr>
             <tr><td>Cream</td><td>Pasty</td><td>Three-quarter tone. Strongest color notes. Foreground darks, saturated accents</td></tr>
-            <tr><td>Butter</td><td>—</td><td>Full pigment, no water. Final touches only — deepest darks, small vivid accents</td></tr>
+            <tr><td>Butter</td><td>&#8212;</td><td>Full pigment, no water. Final touches only &#8212; deepest darks, small vivid accents</td></tr>
           </tbody>
         </table>
       </div>
@@ -1629,7 +1693,7 @@ body { font-family: "DM Sans", sans-serif; background: var(--paper); color: var(
             <tr><td>Dry</td><td>Sharp</td><td>Hard edges, dry brush, drawing, scraping. Time for sharp effects.</td></tr>
             <tr><td>Damp</td><td>Broken</td><td>Broken edges. Lift pigment, scratch out.</td></tr>
             <tr><td>Moist</td><td>Soft</td><td>Soft controlled edges. Misting, shaping, blending.</td></tr>
-            <tr><td>Wet</td><td>Lost</td><td>Soft "lost" or uncontrolled edge shapes.</td></tr>
+            <tr><td>Wet</td><td>Lost</td><td>Soft &#8220;lost&#8221; or uncontrolled edge shapes.</td></tr>
           </tbody>
         </table>
       </div>
@@ -1641,68 +1705,68 @@ body { font-family: "DM Sans", sans-serif; background: var(--paper); color: var(
     <p class="ref-section-sub">Front side: design. Back side: story. Use both before the brush moves.</p>
     <div class="ref-grid">
       <div class="ref-card">
-        <div class="ref-card-eyebrow">Composition Types · Design Side</div>
+        <div class="ref-card-eyebrow">Composition Types &middot; Design Side</div>
         <h3>Choose One Structure</h3>
         <div class="ref-card-body">
-          <p>16 types from Edgar Payne. <em>Useful as a checklist; real paintings combine 2–3.</em></p>
+          <p>16 types from Edgar Payne. <em>Useful as a checklist; real paintings combine 2&#8211;3.</em></p>
           <ul>
-            <li><strong>Balance</strong> — calm, two masses across</li>
-            <li><strong>Oval</strong> — looping, eye returns</li>
-            <li><strong>S-Curve</strong> — rhythmic journey</li>
-            <li><strong>U-Shape</strong> — cradle, framed center</li>
-            <li><strong>Triangle</strong> — stable hierarchy</li>
-            <li><strong>Cross</strong> — anchored skeleton</li>
-            <li><strong>Radiating</strong> — energy outward</li>
-            <li><strong>Corner (C/L)</strong> — wraps the scene</li>
-            <li><strong>Offset</strong> — uneven balance, very common</li>
-            <li><strong>Three Beats</strong> — main / second / discovery</li>
-            <li><strong>Cluster</strong> — massing, professional fast</li>
-            <li><strong>Scatter</strong> — distributed rhythm</li>
-            <li><strong>Diagonal</strong> — momentum, tension</li>
-            <li><strong>Tunnel</strong> — depth with destination</li>
-            <li><strong>Silhouette</strong> — bold readable shape</li>
-            <li><strong>Pattern</strong> — repetition + a break</li>
+            <li><strong>Balance</strong> &#8212; calm, two masses across</li>
+            <li><strong>Oval</strong> &#8212; looping, eye returns</li>
+            <li><strong>S-Curve</strong> &#8212; rhythmic journey</li>
+            <li><strong>U-Shape</strong> &#8212; cradle, framed center</li>
+            <li><strong>Triangle</strong> &#8212; stable hierarchy</li>
+            <li><strong>Cross</strong> &#8212; anchored skeleton</li>
+            <li><strong>Radiating</strong> &#8212; energy outward</li>
+            <li><strong>Corner (C/L)</strong> &#8212; wraps the scene</li>
+            <li><strong>Offset</strong> &#8212; uneven balance, very common</li>
+            <li><strong>Three Beats</strong> &#8212; main / second / discovery</li>
+            <li><strong>Cluster</strong> &#8212; massing, professional fast</li>
+            <li><strong>Scatter</strong> &#8212; distributed rhythm</li>
+            <li><strong>Diagonal</strong> &#8212; momentum, tension</li>
+            <li><strong>Tunnel</strong> &#8212; depth with destination</li>
+            <li><strong>Silhouette</strong> &#8212; bold readable shape</li>
+            <li><strong>Pattern</strong> &#8212; repetition + a break</li>
           </ul>
-          <p><em>Skip the golden ratio mysticism — use the marks as off-center placement aid.</em></p>
+          <p><em>Skip the golden ratio mysticism &#8212; use the marks as off-center placement aid. Rule of thirds works for the same reason.</em></p>
         </div>
       </div>
       <div class="ref-card">
-        <div class="ref-card-eyebrow">Story Prompts · Back Side</div>
-        <h3>Pick 1–2 Before Painting</h3>
+        <div class="ref-card-eyebrow">Story Prompts &middot; Back Side</div>
+        <h3>Pick 1&#8211;2 Before Painting</h3>
         <div class="ref-card-body">
           <p>Don't try to use all 12. Choose what grabbed you.</p>
           <ul>
-            <li><strong>Place</strong> — scene in one sentence</li>
-            <li><strong>Hero</strong> — main character carrying message</li>
-            <li><strong>Atmosphere</strong> — air, weather, light quality</li>
-            <li><strong>Mood</strong> — emotional undercurrent</li>
-            <li><strong>Reveal</strong> — hint or whole, what's hidden</li>
-            <li><strong>Meaning</strong> — what it stands for</li>
-            <li><strong>Light</strong> — what light is doing/saying</li>
-            <li><strong>Flow</strong> — eye journey through scene</li>
-            <li><strong>View</strong> — point of view, why this angle</li>
-            <li><strong>Time</strong> — moment captured</li>
-            <li><strong>Support</strong> — shapes serving the hero</li>
-            <li><strong>Memory</strong> — personal echo, what connects</li>
+            <li><strong>Place</strong> &#8212; scene in one sentence</li>
+            <li><strong>Hero</strong> &#8212; main character carrying message</li>
+            <li><strong>Atmosphere</strong> &#8212; air, weather, light quality</li>
+            <li><strong>Mood</strong> &#8212; emotional undercurrent</li>
+            <li><strong>Reveal</strong> &#8212; hint or whole, what's hidden</li>
+            <li><strong>Meaning</strong> &#8212; what it stands for</li>
+            <li><strong>Light</strong> &#8212; what light is doing/saying</li>
+            <li><strong>Flow</strong> &#8212; eye journey through scene</li>
+            <li><strong>View</strong> &#8212; point of view, why this angle</li>
+            <li><strong>Time</strong> &#8212; moment captured</li>
+            <li><strong>Support</strong> &#8212; shapes serving the hero</li>
+            <li><strong>Memory</strong> &#8212; personal echo, what connects</li>
           </ul>
         </div>
       </div>
       <div class="ref-card">
         <div class="ref-card-eyebrow">Design for Intent</div>
-        <h3>Feeling → Form Pairings</h3>
+        <h3>Feeling &#8594; Form Pairings</h3>
         <div class="ref-card-body">
           <p>Name the feeling first, then build the design to carry it.</p>
           <ul>
-            <li><strong>Farewell</strong> → opening diagonals, receding scale, thinning light</li>
-            <li><strong>Arrival</strong> → converging lines, closing forms, swelling light</li>
-            <li><strong>Awe</strong> → vast masses, tiny human notes, towering value shifts</li>
-            <li><strong>Calm</strong> → long horizontals, wide spacing, softened edges</li>
-            <li><strong>Menace</strong> → oblique horizons, pressurized darks, tight edges</li>
-            <li><strong>Intimacy</strong> → overlapping shapes, compressed space</li>
-            <li><strong>Authority</strong> → erect rhythms, economy of accents</li>
-            <li><strong>Mystery</strong> → simplify shapes, subdue contrasts, suggest</li>
-            <li><strong>Joy</strong> → bright notes climbing, sparkling accents</li>
-            <li><strong>Reflection</strong> → verticals above, mirrors below</li>
+            <li><strong>Farewell</strong> &#8594; opening diagonals, receding scale, thinning light</li>
+            <li><strong>Arrival</strong> &#8594; converging lines, closing forms, swelling light</li>
+            <li><strong>Awe</strong> &#8594; vast masses, tiny human notes, towering value shifts</li>
+            <li><strong>Calm</strong> &#8594; long horizontals, wide spacing, softened edges</li>
+            <li><strong>Menace</strong> &#8594; oblique horizons, pressurized darks, tight edges</li>
+            <li><strong>Intimacy</strong> &#8594; overlapping shapes, compressed space</li>
+            <li><strong>Authority</strong> &#8594; erect rhythms, economy of accents</li>
+            <li><strong>Mystery</strong> &#8594; simplify shapes, subdue contrasts, suggest</li>
+            <li><strong>Joy</strong> &#8594; bright notes climbing, sparkling accents</li>
+            <li><strong>Reflection</strong> &#8594; verticals above, mirrors below</li>
           </ul>
         </div>
       </div>
@@ -1710,36 +1774,76 @@ body { font-family: "DM Sans", sans-serif; background: var(--paper); color: var(
   </section>
 
   <section class="ref-section">
-    <h2 class="ref-section-title">Zbukvic's Four Pillars · Ranked</h2>
+    <h2 class="ref-section-title">Zbukvic's Four Pillars &middot; Ranked</h2>
     <p class="ref-section-sub">When stuck, work upstream. Drawing fixes don't solve color problems; color fixes don't solve drawing problems.</p>
     <div class="ref-grid">
       <div class="ref-card">
-        <div class="ref-card-eyebrow">Pillar 1</div><h3>Drawing &amp; Composition</h3>
-        <div class="ref-card-body"><p>The bones. If broken, nothing downstream can rescue the painting. Field check: notan. Studio check: 10-foot test pinned to wall.</p></div>
+        <div class="ref-card-eyebrow">Pillar 1</div>
+        <h3>Drawing &amp; Composition</h3>
+        <div class="ref-card-body">
+          <p>The bones. If broken, nothing downstream can rescue the painting. <em>&#8220;You can't polish a turd&#8221;</em> &#8212; Machie. <em>&#8220;Underneath a good painting is a solid drawing&#8221;</em> &#8212; Wester.</p>
+          <p>Field check: notan. Studio check: 10-foot test pinned to wall.</p>
+        </div>
       </div>
       <div class="ref-card">
-        <div class="ref-card-eyebrow">Pillar 2</div><h3>Tonal Value</h3>
-        <div class="ref-card-body"><p><em>"90% of the time something is wrong, it's a value problem."</em> — Seiler. Three values minimum, dominant covering ~60%. Squint to check.</p></div>
+        <div class="ref-card-eyebrow">Pillar 2</div>
+        <h3>Tonal Value</h3>
+        <div class="ref-card-body">
+          <p><em>&#8220;90% of the time something is wrong, it's a value problem.&#8221;</em> &#8212; Seiler. Three values minimum, dominant covering ~60%.</p>
+          <p>Squint to check. <em>&#8220;Squint for values, open your eyes for color.&#8221;</em> &#8212; Eugene Hall.</p>
+        </div>
       </div>
       <div class="ref-card">
-        <div class="ref-card-eyebrow">Pillar 3</div><h3>Edges</h3>
-        <div class="ref-card-body"><p><em>"The key to masterful and ordinary paintings is the edges."</em> — Schmid. Hard at focal only. Broken at midground. Lost at background.</p></div>
+        <div class="ref-card-eyebrow">Pillar 3</div>
+        <h3>Edges</h3>
+        <div class="ref-card-body">
+          <p><em>&#8220;The key to masterful and ordinary paintings is the edges.&#8221;</em> &#8212; Schmid. Hard at focal only. Broken at midground. Lost at background.</p>
+          <p><em>&#8220;All your edges look the same&#8221;</em> &#8212; the harshest critique. Audit before declaring done.</p>
+        </div>
       </div>
       <div class="ref-card">
-        <div class="ref-card-eyebrow">Pillar 4</div><h3>Color</h3>
-        <div class="ref-card-body"><p>Last in the hierarchy. <em>"You can commit any sin with color, as long as that color is the right value."</em> — Casey. Mother Color before first wash.</p></div>
+        <div class="ref-card-eyebrow">Pillar 4</div>
+        <h3>Color</h3>
+        <div class="ref-card-body">
+          <p>Last in the hierarchy because it depends on the first three. <em>&#8220;You can commit any sin with color, as long as that color is the right value.&#8221;</em> &#8212; Casey.</p>
+          <p>Mother Color before first wash. Trace into every passage.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <section class="ref-section">
     <h2 class="ref-section-title">When the Painting Drifts</h2>
-    <p class="ref-section-sub">Diagnostic prompts. Pick one based on what's actually broken.</p>
+    <p class="ref-section-sub">Diagnostic prompts. Pick one based on what's actually broken &#8212; don't run the whole list.</p>
     <div class="ref-grid">
-      <div class="ref-card"><div class="ref-card-eyebrow">If scattered or lifeless</div><h3>First Principles</h3><div class="ref-card-body"><p>Strip down to story, big value masses, edge control. If the 10-foot read is weak, don't add detail — regroup values, simplify shapes, place contrast on purpose.</p></div></div>
-      <div class="ref-card"><div class="ref-card-eyebrow">Before any big change</div><h3>Second-Order Thinking</h3><div class="ref-card-body"><p>Every "improvement" steals attention from somewhere else. If pushing this contrast, what must get quieter? Test small before committing.</p></div></div>
-      <div class="ref-card"><div class="ref-card-eyebrow">If repeating the same frustration</div><h3>Root Cause</h3><div class="ref-card-body"><p>Name the problem in 5 words. When did it first drift? What broke first — value, draw, edges, plan? Most problems start upstream: weak reference, weak thumbnail, unclear light logic.</p></div></div>
-      <div class="ref-card"><div class="ref-card-eyebrow">Mid-painting, no momentum</div><h3>OODA Loop</h3><div class="ref-card-body"><p><strong>Observe</strong> the facts. <strong>Orient</strong> on priority. <strong>Decide</strong> the single best next move. <strong>Act</strong> cleanly. Step back. Loop.</p></div></div>
+      <div class="ref-card">
+        <div class="ref-card-eyebrow">If scattered or lifeless</div>
+        <h3>First Principles</h3>
+        <div class="ref-card-body">
+          <p>Strip down to story, big value masses, edge control. If the 10-foot read is weak, don't add detail &#8212; regroup values, simplify shapes, place contrast on purpose.</p>
+        </div>
+      </div>
+      <div class="ref-card">
+        <div class="ref-card-eyebrow">Before any big change</div>
+        <h3>Second-Order Thinking</h3>
+        <div class="ref-card-body">
+          <p>Every &#8220;improvement&#8221; steals attention from somewhere else. If pushing this contrast, what must get quieter? Test small before committing.</p>
+        </div>
+      </div>
+      <div class="ref-card">
+        <div class="ref-card-eyebrow">If repeating the same frustration</div>
+        <h3>Root Cause</h3>
+        <div class="ref-card-body">
+          <p>Name the problem in 5 words. When did it first drift? What broke first &#8212; value, draw, edges, plan? Most problems start upstream: weak reference, weak thumbnail, unclear light logic.</p>
+        </div>
+      </div>
+      <div class="ref-card">
+        <div class="ref-card-eyebrow">Mid-painting, no momentum</div>
+        <h3>OODA Loop</h3>
+        <div class="ref-card-body">
+          <p><strong>Observe</strong> the facts. <strong>Orient</strong> on priority. <strong>Decide</strong> the single best next move. <strong>Act</strong> cleanly. Step back. Loop.</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1747,20 +1851,66 @@ body { font-family: "DM Sans", sans-serif; background: var(--paper); color: var(
     <h2 class="ref-section-title">The Working Rules</h2>
     <p class="ref-section-sub">From the masters. The ones worth tattooing on the inside of your wrist.</p>
     <div class="ref-grid">
-      <div class="ref-card"><h3>Translate, don't transcribe.</h3><div class="ref-card-body"><p><em>"It's a poem, not a police report."</em> — Genn. The scene is the prompt, not the assignment.</p></div></div>
-      <div class="ref-card"><h3>Refuse to hurry.</h3><div class="ref-card-body"><p>Whitney. Pre-painting decisions are where the painting is won or lost. Speed comes from clarity, not from rushing the brush.</p></div></div>
-      <div class="ref-card"><h3>Edit, edit, edit.</h3><div class="ref-card-body"><p>The worst reason to include something is because it's there. — Swiatoviak.</p></div></div>
-      <div class="ref-card"><h3>Start big. Stay big.</h3><div class="ref-card-body"><p>Stay loose, stay lost, stay abstract as long as you can. — Bermingham / Winspear. Detail too early kills depth.</p></div></div>
-      <div class="ref-card"><h3>Connect the darks.</h3><div class="ref-card-body"><p>Schmid. A connected dark mass reads stronger than fragmented patches. Same for the lights.</p></div></div>
-      <div class="ref-card"><h3>Place it. Leave it.</h3><div class="ref-card-body"><p>Don't fix things. Put it down, then put something else down. — Eugene Hall. Touching drying watercolor destroys it.</p></div></div>
-      <div class="ref-card"><h3>Look at the subject longer than the paper.</h3><div class="ref-card-body"><p>60/40. When that ratio flips, anxiety has taken over. Look up. Reconnect with the words.</p></div></div>
-      <div class="ref-card"><h3>Stop sooner than you want to.</h3><div class="ref-card-body"><p>Get in, say it, get out. — Herron. <em>"It takes five people to paint a painting: one to paint, four to make them stop."</em></p></div></div>
+      <div class="ref-card">
+        <h3>Translate, don't transcribe.</h3>
+        <div class="ref-card-body">
+          <p><em>&#8220;It's a poem, not a police report.&#8221;</em> &#8212; Genn. The scene is the prompt, not the assignment.</p>
+        </div>
+      </div>
+      <div class="ref-card">
+        <h3>Refuse to hurry.</h3>
+        <div class="ref-card-body">
+          <p>Whitney. Pre-painting decisions are where the painting is won or lost. Speed comes from clarity, not from rushing the brush.</p>
+        </div>
+      </div>
+      <div class="ref-card">
+        <h3>Edit, edit, edit.</h3>
+        <div class="ref-card-body">
+          <p>Auster. The worst reason to include something is because it's there. &#8212; Swiatoviak.</p>
+        </div>
+      </div>
+      <div class="ref-card">
+        <h3>Start big. Stay big.</h3>
+        <div class="ref-card-body">
+          <p>Stay loose, stay lost, stay abstract as long as you can. &#8212; Bermingham / Winspear. Detail too early kills depth.</p>
+        </div>
+      </div>
+      <div class="ref-card">
+        <h3>Connect the darks.</h3>
+        <div class="ref-card-body">
+          <p>Schmid. A connected dark mass reads stronger than fragmented patches. Same for the lights.</p>
+        </div>
+      </div>
+      <div class="ref-card">
+        <h3>Place it. Leave it.</h3>
+        <div class="ref-card-body">
+          <p>Don't fix things. Put it down, then put something else down. &#8212; Eugene Hall. Touching drying watercolor destroys it.</p>
+        </div>
+      </div>
+      <div class="ref-card">
+        <h3>Look at the subject longer than the paper.</h3>
+        <div class="ref-card-body">
+          <p>60/40. When that ratio flips, anxiety has taken over. Look up. Reconnect with the words.</p>
+        </div>
+      </div>
+      <div class="ref-card">
+        <h3>Stop sooner than you want to.</h3>
+        <div class="ref-card-body">
+          <p>Get in, say it, get out. &#8212; Herron. <em>&#8220;It takes five people to paint a painting: one to paint, four to make them stop.&#8221;</em></p>
+        </div>
+      </div>
     </div>
   </section>
 
   <footer class="colophon">
-    <div>Built from: Zbukvic · Wood · O'Hara · Whitney · Reid · Pike · Sargent · Hall · Schmid ·<br>Puttrich (Fairview Finder, Thinking Wheel, Design for Intent) · 262 quotes from <em>What Stuck</em>.</div>
-    <div class="colophon-right">Edition I &middot; April 2026<br>Working reference. Mark it up.</div>
+    <div>
+      Built from: Zbukvic &middot; Wood &middot; O'Hara &middot; Whitney &middot; Reid &middot; Pike &middot; Sargent &middot; Hall &middot; Schmid &middot; Sargent &middot;<br>
+      Puttrich (Fairview Finder, Thinking Wheel, Design for Intent) &middot; 262 quotes from <em>What Stuck</em>.
+    </div>
+    <div class="colophon-right">
+      Edition I &middot; April 2026<br>
+      Working reference. Mark it up.
+    </div>
   </footer>
 
 </div>
