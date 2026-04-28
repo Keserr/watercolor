@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watercolor Reference — Palette System</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1814;
+  --paper: #f7f4ee;
+  --paper-2: #ede9e0;
+  --paper-3: #e2ddd3;
+  --accent: #8b4513;
+  --accent-2: #2c4a6e;
+  --accent-3: #3d6b4f;
+  --muted: #7a7268;
+  --warn: #993c1d;
+  --info: #185fa5;
+  --border: rgba(26,24,20,0.12);
+  --shadow: 0 2px 12px rgba(26,24,20,0.08);
+  --radius: 6px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: "DM Sans", sans-serif; background: var(--paper); color: var(--ink); font-size: 14px; line-height: 1.65; }
+
+.site-header { background: var(--ink); color: var(--paper); padding: 22px 40px 18px; border-bottom: 3px solid var(--accent); }
+.site-header h1 { font-family: "Playfair Display", serif; font-size: 24px; font-weight: 600; color: var(--paper); }
+.site-header p { font-size: 11px; color: rgba(247,244,238,0.5); margin-top: 2px; font-weight: 300; letter-spacing: 0.08em; text-transform: uppercase; }
+
+.tab-nav { background: var(--ink); display: flex; padding: 0 40px; border-bottom: 1px solid rgba(255,255,255,0.08); overflow-x: auto; scrollbar-width: none; gap: 0; }
+.tab-nav::-webkit-scrollbar { display: none; }
+.tab-btn { background: none; border: none; color: rgba(247,244,238,0.45); font-family: "DM Sans", sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; padding: 13px 18px 11px; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.18s ease; }
+.tab-btn:hover { color: rgba(247,244,238,0.8); }
+.tab-btn.active { color: #f7f4ee; border-bottom-color: var(--accent); }
+.tab-btn.wheel-tab-btn.active { border-bottom-color: #c8a84a; }
+.tab-btn.brush-tab-btn.active { border-bottom-color: #6aaa8a; }
+.tab-btn.neo-tab-btn.active   { border-bottom-color: #c07ab0; }
+
+.panel { display: none; padding: 36px 40px 60px; max-width: 1100px; }
+.panel.active { display: block; }
+.panel.wide { max-width: 100%; padding: 0; }
+
+.panel h2 { font-family: "Playfair Display", serif; font-size: 22px; font-weight: 600; margin-bottom: 6px; color: var(--ink); }
+.panel h3 { font-family: "Playfair Display", serif; font-size: 17px; font-weight: 400; font-style: italic; margin: 28px 0 12px; color: var(--ink); }
+.panel h4 { font-size: 12px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); margin: 20px 0 8px; }
+.panel p { color: #3a3830; margin-bottom: 10px; font-size: 13.5px; }
+.panel .subtitle { font-size: 12px; color: var(--muted); margin-bottom: 24px; }
+
+.palette-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 12px; }
+.palette-grid-7 { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-bottom: 12px; }
+.row-label { font-size: 10px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; padding: 14px 0 6px; border-top: 1px solid var(--border); margin-top: 2px; grid-column: 1 / -1; }
+.row-label:first-of-type { border-top: none; padding-top: 0; }
+.swatch { border-radius: 6px; overflow: hidden; box-shadow: var(--shadow); background: #fff; }
+.swatch-color { height: 52px; }
+.swatch-info { padding: 6px 7px 7px; }
+.swatch-name { font-size: 10px; font-weight: 500; color: var(--ink); line-height: 1.35; }
+.swatch-brand { font-size: 9px; color: var(--muted); margin-top: 1px; line-height: 1.3; }
+.flag-warn { display: inline-block; font-size: 8.5px; font-weight: 500; color: var(--warn); background: #faece7; border-radius: 3px; padding: 1px 4px; margin-top: 2px; }
+.flag-info { display: inline-block; font-size: 8.5px; font-weight: 500; color: var(--info); background: #e6f1fb; border-radius: 3px; padding: 1px 4px; margin-top: 2px; }
+
+.mix-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 20px; }
+.mix-table th { text-align: left; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); padding: 6px 10px; border-bottom: 1px solid var(--border); background: var(--paper-2); }
+.mix-table td { padding: 7px 10px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.45; }
+.mix-table tr:hover td { background: var(--paper-2); }
+.pal-badge { font-size: 8px; font-weight: 500; padding: 1px 5px; border-radius: 3px; letter-spacing: 0.05em; text-transform: uppercase; }
+.pal-p { background: #f5edda; color: #7a5a1a; }
+.pal-s { background: #ddeaf5; color: #1e4a6e; }
+.pal-t { background: #ede0f0; color: #5a3070; }
+
+.info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 24px; }
+.info-card { padding: 16px 18px; border-radius: var(--radius); border-left: 3px solid; }
+.info-card.warm { background: #faf5ed; border-color: var(--accent); }
+.info-card.cool { background: #edf2fa; border-color: var(--accent-2); }
+.info-card.neutral { background: var(--paper-2); border-color: var(--muted); }
+.info-card.green { background: #edf5ef; border-color: var(--accent-3); }
+.info-card h4 { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; margin-top: 0; }
+.info-card p { font-size: 12.5px; color: #3a3830; margin: 0; line-height: 1.6; }
+
+.clock-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+.clock-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 12.5px; vertical-align: top; }
+.clock-table td:first-child { font-family: "DM Mono", monospace; font-weight: 500; font-size: 13px; width: 110px; color: var(--accent); }
+.clock-table tr:hover td { background: var(--paper-2); }
+
+.legend-block { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); line-height: 1.8; }
+.legend-block strong { color: var(--ink); font-weight: 500; }
+.legend-row { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; }
+.legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; border: 1px solid var(--border); }
+
+.mixture-pair { margin-bottom: 32px; }
+.strip { display: flex; height: 28px; border-radius: 4px; overflow: hidden; margin: 8px 0 4px; box-shadow: 0 1px 4px rgba(0,0,0,0.12); }
+.strip-seg { flex: 1; }
+.strip-label { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); font-family: "DM Mono", monospace; }
+
+/* ── BRUSH TAB ── */
+.brush-section-head { font-family: "Playfair Display", serif; font-size: 15px; font-weight: 600; color: var(--ink); padding: 18px 0 6px; margin-top: 24px; border-bottom: 2px solid var(--border); margin-bottom: 12px; display: flex; align-items: baseline; gap: 10px; }
+.brush-section-head:first-of-type { margin-top: 0; }
+.brush-section-sub { font-family: "DM Mono", monospace; font-size: 9.5px; font-weight: 400; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.brush-table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin-bottom: 8px; }
+.brush-table th { text-align: left; font-size: 9.5px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding: 6px 10px; border-bottom: 2px solid var(--border); background: var(--paper-2); white-space: nowrap; }
+.brush-table td { padding: 7px 10px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+.brush-table tr:hover td { background: var(--paper-2); }
+.brush-table .col-brush { font-family: "DM Mono", monospace; font-size: 10.5px; font-weight: 500; color: var(--ink); white-space: nowrap; min-width: 130px; }
+.brush-table .col-brand { font-size: 10.5px; color: var(--muted); white-space: nowrap; }
+.brush-table .col-hair { font-size: 10.5px; color: #3a3830; }
+.brush-table .col-use { font-size: 11px; color: #3a3830; }
+.brush-table .col-note { font-size: 10.5px; color: var(--muted); font-style: italic; }
+.btag { display: inline-block; font-size: 8px; font-weight: 500; padding: 1px 5px; border-radius: 3px; margin-right: 2px; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+.btag-wash   { background: #ddeaf5; color: #1a4a6e; }
+.btag-detail { background: #f5edda; color: #7a5a1a; }
+.btag-edge   { background: #ede0f0; color: #5a3070; }
+.btag-lift   { background: #faece7; color: #993c1d; }
+.btag-line   { background: #e0f0e8; color: #2a5a3a; }
+.btag-dry    { background: #ece8e0; color: #5a5040; }
+.btag-quill  { background: #f0e8d8; color: #6a4820; }
+.flag-verify      { display: inline-block; font-size: 8.5px; font-weight: 500; color: #993c1d; background: #faece7; border-radius: 3px; padding: 1px 4px; }
+.flag-verify-blue { display: inline-block; font-size: 8.5px; font-weight: 500; color: #185fa5; background: #e6f1fb; border-radius: 3px; padding: 1px 4px; }
+.dual-note { font-family: "DM Mono", monospace; font-size: 8.5px; color: var(--muted); display: block; margin-top: 2px; }
+.brush-intro { font-size: 12px; color: var(--muted); font-style: italic; margin-bottom: 14px; line-height: 1.6; padding: 10px 14px; background: var(--paper-2); border-left: 3px solid var(--border); border-radius: 0 4px 4px 0; }
+.brush-gap-card { background: #faf5ed; border-left: 3px solid var(--accent); border-radius: 0 4px 4px 0; padding: 14px 16px; margin-top: 8px; font-size: 12px; color: #3a3830; line-height: 1.7; }
+.brush-gap-card strong { color: var(--ink); }
+
+@media (max-width: 700px) {
+  .palette-grid { grid-template-columns: repeat(3, 1fr); }
+  .palette-grid-7 { grid-template-columns: repeat(3, 1fr); }
+  .info-grid { grid-template-columns: 1fr; }
+  .panel { padding: 24px 20px 48px; }
+  .tab-btn { padding: 11px 12px 9px; font-size: 10px; }
+  .brush-table .col-note { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <h1>Watercolor Reference</h1>
+  <p>Primary 18 · Secondary 24 · Tertiary 14 · Color Wheel · Mixing Guides · Zbukvic Framework · Brushes · Neocolor II</p>
+</div>
+
+<nav class="tab-nav">
+  <button class="tab-btn active"        onclick="showTab('p18',this)">Primary 18</button>
+  <button class="tab-btn"               onclick="showTab('s24',this)">Secondary 24</button>
+  <button class="tab-btn"               onclick="showTab('t14',this)">Tertiary 14</button>
+  <button class="tab-btn wheel-tab-btn" onclick="showTab('wheel',this)">Color Wheel</button>
+  <button class="tab-btn"               onclick="showTab('mix-primary',this)">Mixing: Primary</button>
+  <button class="tab-btn"               onclick="showTab('mix-all',this)">Mixing: All Palettes</button>
+  <button class="tab-btn"               onclick="showTab('urban',this)">Urban Sketching</button>
+  <button class="tab-btn"               onclick="showTab('landscape',this)">Landscape</button>
+  <button class="tab-btn"               onclick="showTab('water-night',this)">Water &amp; Night</button>
+  <button class="tab-btn"               onclick="showTab('five-mix',this)">Five-Mixture</button>
+  <button class="tab-btn"               onclick="showTab('zbukvic',this)">Zbukvic</button>
+  <button class="tab-btn brush-tab-btn" onclick="showTab('brushes',this)">Brushes</button>
+  <button class="tab-btn neo-tab-btn"   onclick="showTab('neocolor',this)">Neocolor II</button>
+</nav>
+
+<!-- TAB 1: PRIMARY 18 -->
+<div class="panel active" id="tab-p18">
+  <h2>18-Color Primary Palette</h2>
+  <p class="subtitle">Schmincke Horadam unless noted (DS = Daniel Smith). Default palette — mix all greens, grays, and violets from scratch.</p>
+  <div class="palette-grid">
+    <div class="row-label">Row 1 — Yellows &amp; warm golds</div>
+    <div class="swatch"><div class="swatch-color" style="background:#F8F058"></div><div class="swatch-info"><div class="swatch-name">Hansa Yellow Light</div><div class="swatch-brand">DS · PY3 · cool clean yellow</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#F0C800"></div><div class="swatch-info"><div class="swatch-name">Cadmium Yellow Light</div><div class="swatch-brand">Horadam · PY35 · opaque warm yellow</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#C89010"></div><div class="swatch-info"><div class="swatch-name">Quinacridone Gold</div><div class="swatch-brand">DS · PO49 · transparent warm gold</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#C8902A"></div><div class="swatch-info"><div class="swatch-name">Yellow Ochre</div><div class="swatch-brand">Horadam · PY43 · granulating earth</div></div></div>
+    <div style="visibility:hidden"></div><div style="visibility:hidden"></div>
+    <div class="row-label">Row 2 — Neutrals, pinks &amp; reds</div>
+    <div class="swatch"><div class="swatch-color" style="background:#E0C898"></div><div class="swatch-info"><div class="swatch-name">Buff Titanium</div><div class="swatch-brand">DS · PW6:1 · opaque warm neutral</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#E05878"></div><div class="swatch-info"><div class="swatch-name">Quinacridone Rose</div><div class="swatch-brand">DS · PV19 · transparent cool pink</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#D83020"></div><div class="swatch-info"><div class="swatch-name">Cadmium Red Medium</div><div class="swatch-brand">Horadam · PR108 · opaque warm red</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#A01828"></div><div class="swatch-info"><div class="swatch-name">Alizarin Crimson</div><div class="swatch-brand">Horadam · PR83 · transparent cool red</div><div class="flag-warn">⚠ lightfastness II</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#903828"></div><div class="swatch-info"><div class="swatch-name">English Venetian Red</div><div class="swatch-brand">Horadam · PR101 · opaque earth red</div></div></div>
+    <div style="visibility:hidden"></div>
+    <div class="row-label">Row 3 — Blues &amp; blue-greens</div>
+    <div class="swatch"><div class="swatch-color" style="background:#00A8B8"></div><div class="swatch-info"><div class="swatch-name">Cobalt Teal</div><div class="swatch-brand">DS · PB36+PG50 · granulating teal</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#008898"></div><div class="swatch-info"><div class="swatch-name">Phthalo Turquoise</div><div class="swatch-brand">DS · PB16 · intense staining teal</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#5888C8"></div><div class="swatch-info"><div class="swatch-name">Cobalt Blue Light</div><div class="swatch-brand">Horadam · PB28 · granulating mid blue</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#283898"></div><div class="swatch-info"><div class="swatch-name">French Ultramarine</div><div class="swatch-brand">Horadam · PB29 · granulating warm blue</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#904820"></div><div class="swatch-info"><div class="swatch-name">Burnt Sienna</div><div class="swatch-brand">Horadam · PBr7 · transparent warm earth</div></div></div>
+    <div style="visibility:hidden"></div>
+    <div class="row-label">Row 4 — Greens, darks &amp; mineral specials</div>
+    <div class="swatch"><div class="swatch-color" style="background:#006840"></div><div class="swatch-info"><div class="swatch-name">Phthalo Green BS</div><div class="swatch-brand">DS · PG7 · intense staining green</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#386050"></div><div class="swatch-info"><div class="swatch-name">Undersea Green</div><div class="swatch-brand">DS · PG26+PBr7 · muted granulating</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#604838"></div><div class="swatch-info"><div class="swatch-name">Bloodstone Genuine</div><div class="swatch-brand">DS · natural mineral · granulating</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#402818"></div><div class="swatch-info"><div class="swatch-name">Burnt Umber</div><div class="swatch-brand">Horadam · PBr7 · cool neutral dark earth</div></div></div>
+    <div style="visibility:hidden"></div><div style="visibility:hidden"></div>
+  </div>
+  <div class="legend-block">
+    <strong>Philosophy:</strong> No convenience greens, grays, or violets — all mixed from scratch. Key pairs: French Ultramarine + Burnt Sienna (granulating neutral grays), Quin Rose + French Ultramarine (violets), Phthalo Green BS + warm (foliage range), Cobalt Teal + Yellow Ochre (naturalistic greens).<br><br>
+    <strong>⚠ High tinting:</strong> Phthalo Green BS (PG7) and Phthalo Turquoise (PB16) dominate mixes — use strict ratios.<br>
+    <strong>⚠ Alizarin Crimson:</strong> ASTM lightfastness II — avoid for archival work. Upgrade path: DS Pyrrol Crimson (PR264).
+    <div class="legend-row">
+      <div class="legend-item"><div class="legend-dot" style="background:#e8c87a"></div>Schmincke Horadam (9 colors)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#378add"></div>Daniel Smith (9 colors)</div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 2: SECONDARY 24 -->
+<div class="panel" id="tab-s24">
+  <h2>24-Color Secondary Palette</h2>
+  <p class="subtitle">Fills gaps not covered by the 18-color primary. All Daniel Smith unless noted.</p>
+  <div class="palette-grid">
+    <div class="row-label">Row 1 — Yellows &amp; warm lights</div>
+    <div class="swatch"><div class="swatch-color" style="background:#F4E350"></div><div class="swatch-info"><div class="swatch-name">Hansa Yellow Medium</div><div class="swatch-brand">DS · PY97 · warm mid yellow</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#DDA520"></div><div class="swatch-info"><div class="swatch-name">Indian Yellow</div><div class="swatch-brand">DS · PY153 · deep warm glow</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#E8C87A"></div><div class="swatch-info"><div class="swatch-name">Naples Yellow</div><div class="swatch-brand">DS · PY35 mix · opaque warm</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#C8960C"></div><div class="swatch-info"><div class="swatch-name">Nickel Azo Yellow</div><div class="swatch-brand">DS · PY150 · granulating gold</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#B8762A"></div><div class="swatch-info"><div class="swatch-name">Raw Sienna</div><div class="swatch-brand">W&amp;N · PBr7 · transparent earth</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#D84800"></div><div class="swatch-info"><div class="swatch-name">Transparent Orange</div><div class="swatch-brand">DS · PO71 · luminous orange</div></div></div>
+    <div class="row-label">Row 2 — Reds, pinks &amp; violets</div>
+    <div class="swatch"><div class="swatch-color" style="background:#E03020"></div><div class="swatch-info"><div class="swatch-name">Pyrrol Scarlet</div><div class="swatch-brand">DS · PR255 · opaque fire red</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#B01828"></div><div class="swatch-info"><div class="swatch-name">Pyrrol Crimson</div><div class="swatch-brand">DS · PR264 · deep cool red</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#C03060"></div><div class="swatch-info"><div class="swatch-name">Quin Magenta</div><div class="swatch-brand">DS · PR122 · mixing pink anchor</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#702040"></div><div class="swatch-info"><div class="swatch-name">Perylene Maroon</div><div class="swatch-brand">DS · PR179 · dark earthy red</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#6040A0"></div><div class="swatch-info"><div class="swatch-name">Carbazole Violet</div><div class="swatch-brand">DS · PV23 · mixing violet</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#B8A8D0"></div><div class="swatch-info"><div class="swatch-name">Lavender</div><div class="swatch-brand">Holbein · granulating violet</div></div></div>
+    <div class="row-label">Row 3 — Blues</div>
+    <div class="swatch"><div class="swatch-color" style="background:#6898C8"></div><div class="swatch-info"><div class="swatch-name">Cerulean Blue</div><div class="swatch-brand">DS · PB35 · sky, opaque cool</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#4870A8"></div><div class="swatch-info"><div class="swatch-name">Cerulean Blue Chromium</div><div class="swatch-brand">DS · PB36 · granulating sky</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#284888"></div><div class="swatch-info"><div class="swatch-name">Indanthrone Blue</div><div class="swatch-brand">DS · PB60 · deep cool dark</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#182848"></div><div class="swatch-info"><div class="swatch-name">Indigo</div><div class="swatch-brand">DS · PB60+PBk6 · warm near-black</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#3C4450"></div><div class="swatch-info"><div class="swatch-name">Payne's Gray</div><div class="swatch-brand">QOR · PB15+PBk · neutral cool dark</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#203858"></div><div class="swatch-info"><div class="swatch-name">Phthalo Blue RS</div><div class="swatch-brand">DS · PB15:6 · intense cool blue</div></div></div>
+    <div class="row-label">Row 4 — Greens, darks &amp; specials</div>
+    <div class="swatch"><div class="swatch-color" style="background:#608030"></div><div class="swatch-info"><div class="swatch-name">Green Gold</div><div class="swatch-brand">DS · PY129 · yellow-green bridge</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#286040"></div><div class="swatch-info"><div class="swatch-name">Viridian</div><div class="swatch-brand">DS · PG18 · transparent cool green</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#183020"></div><div class="swatch-info"><div class="swatch-name">Perylene Green</div><div class="swatch-brand">DS · PBk31 · near-black green</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#403020"></div><div class="swatch-info"><div class="swatch-name">Van Dyke Brown</div><div class="swatch-brand">DS · PBr7+PBk · warm transparent dark</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#1C1C20"></div><div class="swatch-info"><div class="swatch-name">Lunar Black</div><div class="swatch-brand">DS · PBk11 · granulating mineral black</div><div class="flag-info">granulates</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#C89070"></div><div class="swatch-info"><div class="swatch-name">Potter's Pink</div><div class="swatch-brand">DS · PR233 · granulating, unique</div><div class="flag-info">granulates</div></div></div>
+  </div>
+  <div class="legend-block">
+    <strong>Payne's Gray (QOR):</strong> Transparent, less blue-biased than DS version; mixes clean darks without green drift.<br>
+    <strong>Lunar Black (DS PBk11):</strong> Iron oxide mineral, heavy granulation — warmer and more textural than Payne's Gray. Spectacular for rocky surfaces and aged architecture. Pairs well with Undersea Green and Bloodstone Genuine.
+  </div>
+</div>
+
+<!-- TAB 3: TERTIARY 14 -->
+<div class="panel" id="tab-t14">
+  <h2>14-Color Tertiary Palette</h2>
+  <p class="subtitle">Granulation, atmosphere, and special-effects palette. Loose, textural, luminous work — skies, water, landscape mood. Mixed brands.</p>
+  <div class="palette-grid-7">
+    <div class="row-label">Row 1 — Warm spine &amp; pinks</div>
+    <div class="swatch"><div class="swatch-color" style="background:#F5E228"></div><div class="swatch-info"><div class="swatch-name">Azo Yellow</div><div class="swatch-brand">QOR · PY74 · clean warm yellow</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#E0C458"></div><div class="swatch-info"><div class="swatch-name">Nickel Titanate Yellow</div><div class="swatch-brand">DS · PY53 · opaque granulating</div><div class="flag-info">granulates</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#C87830"></div><div class="swatch-info"><div class="swatch-name">Aussie Red Gold</div><div class="swatch-brand">DS · PY42 · granulating warm gold</div><div class="flag-info">granulates</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#B86808"></div><div class="swatch-info"><div class="swatch-name">Quin Gold Deep</div><div class="swatch-brand">QOR · PO49 · deep transparent gold</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#F060A0"></div><div class="swatch-info"><div class="swatch-name">Opera Pink</div><div class="swatch-brand">DS · PR122+fluorescent</div><div class="flag-warn">⚠ fugitive</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#C05870"></div><div class="swatch-info"><div class="swatch-name">Rose Madder</div><div class="swatch-brand">Holbein · NR9 · luminous pink</div><div class="flag-warn">⚠ fugitive</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#503090"></div><div class="swatch-info"><div class="swatch-name">Imperial Purple</div><div class="swatch-brand">premix · 3pt ultramarine + 1pt Quin Rose</div></div></div>
+    <div class="row-label">Row 2 — Granulating specials, blues &amp; mineral greens</div>
+    <div class="swatch"><div class="swatch-color" style="background:#506880"></div><div class="swatch-info"><div class="swatch-name">Moonglow</div><div class="swatch-brand">DS · PB29+PV19+PBk11</div><div class="flag-info">granulates</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#2A3858"></div><div class="swatch-info"><div class="swatch-name">Lunar Blue</div><div class="swatch-brand">DS · PBk11+PB29 · dark blue</div><div class="flag-info">granulates</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#007890"></div><div class="swatch-info"><div class="swatch-name">Peacock Blue</div><div class="swatch-brand">Holbein · PB15+PG7</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#38A8C8"></div><div class="swatch-info"><div class="swatch-name">Manganese Blue</div><div class="swatch-brand">DS · PB33 hue · heavy granulating sky</div><div class="flag-info">granulates heavily</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#486878"></div><div class="swatch-info"><div class="swatch-name">Cascade</div><div class="swatch-brand">DS · PB29+PB36+PG26</div><div class="flag-info">granulates</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#587860"></div><div class="swatch-info"><div class="swatch-name">Diopside Genuine</div><div class="swatch-brand">DS · natural mineral · teal-green</div><div class="flag-info">granulates</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#788060"></div><div class="swatch-info"><div class="swatch-name">Serpentine Genuine</div><div class="swatch-brand">DS · natural mineral · olive green</div><div class="flag-info">granulates</div></div></div>
+  </div>
+  <div class="legend-block">
+    <strong>Identity:</strong> 9 of 14 pigments granulate. Designed for loose textural work alongside the primary palette, not as a standalone.<br>
+    <strong>⚠ Opera Pink &amp; Rose Madder:</strong> Fugitive — used knowingly for luminosity, not archival work.<br>
+    <strong>Mineral pair:</strong> Diopside + Serpentine granulate compatibly. Pair with Moonglow and Cascade for atmospheric layering.
+  </div>
+</div>
+
+<!-- TAB 4: COLOR WHEEL -->
+<div class="panel wide" id="tab-wheel"></div>
+
+<!-- TAB 5: MIXING PRIMARY -->
+<div class="panel" id="tab-mix-primary">
+  <h2>Mixing Guide — Primary Palette</h2>
+  <p class="subtitle">All mixes from the 18-color primary set only. Organized by landscape plane.</p>
+  <h3>Background Plane — Cool, atmospheric, receding</h3>
+  <table class="mix-table">
+    <tr><th>Mix Name</th><th>Colors</th><th>Consistency</th><th>Use</th></tr>
+    <tr><td>Cool Atmospheric Sky</td><td>Cobalt Blue Light + trace Quin Rose</td><td>Tea–Coffee</td><td>Clear sky graduation, top of sky</td></tr>
+    <tr><td>Hazy Distance</td><td>Cobalt Blue Light + Buff Titanium</td><td>Tea</td><td>Atmospheric haze, far hills</td></tr>
+    <tr><td>Distance Green</td><td>Cobalt Blue Light + Yellow Ochre</td><td>Coffee</td><td>Muted receding trees</td></tr>
+    <tr><td>Cool Violet Sky</td><td>French Ultramarine + Quin Rose</td><td>Coffee</td><td>Evening/overcast sky</td></tr>
+    <tr><td>Warm Horizon Glow</td><td>Quin Gold + Buff Titanium</td><td>Tea–Coffee</td><td>Sunset horizon warmth</td></tr>
+    <tr><td>Storm Sky</td><td>French Ultramarine + Burnt Sienna (heavy blue)</td><td>Milk</td><td>Dramatic overcast</td></tr>
+    <tr><td>Warm Gray Sky</td><td>Burnt Sienna + French Ultramarine (near-neutral)</td><td>Coffee</td><td>Overcast warm light</td></tr>
+  </table>
+  <h3>Midground Plane — Transitional, moderate saturation</h3>
+  <table class="mix-table">
+    <tr><th>Mix Name</th><th>Colors</th><th>Consistency</th><th>Use</th></tr>
+    <tr><td>Neutral Gray</td><td>French Ultramarine + Burnt Sienna (balanced)</td><td>Milk</td><td>Stonework, aged concrete, shadow fill</td></tr>
+    <tr><td>Warm Stone</td><td>Yellow Ochre + Buff Titanium + trace Burnt Sienna</td><td>Milk</td><td>Limestone, sandstone, plaster</td></tr>
+    <tr><td>Mid Green</td><td>French Ultramarine + Yellow Ochre</td><td>Milk</td><td>Midground trees, dusty foliage</td></tr>
+    <tr><td>Brick Mid</td><td>Cadmium Red Medium + Yellow Ochre</td><td>Milk</td><td>Warm brick midground</td></tr>
+    <tr><td>Shadow Violet</td><td>French Ultramarine + Quin Rose (60/40)</td><td>Milk</td><td>Mid-tone violet shadows</td></tr>
+    <tr><td>Muted Teal</td><td>Cobalt Teal + Yellow Ochre</td><td>Milk</td><td>Naturalistic foliage, roof vegetation</td></tr>
+    <tr><td>Warm Neutral</td><td>Burnt Sienna + Yellow Ochre</td><td>Milk</td><td>Warm mid-tone passages</td></tr>
+    <tr><td>Cool Neutral</td><td>Burnt Umber + Cobalt Blue Light</td><td>Milk</td><td>Overcast shadow, cool stonework</td></tr>
+    <tr><td>Venetian Shadow</td><td>English Venetian Red + French Ultramarine</td><td>Milk</td><td>Warm brick shadow</td></tr>
+  </table>
+  <h3>Foreground Plane — Rich, warm, advancing</h3>
+  <table class="mix-table">
+    <tr><th>Mix Name</th><th>Colors</th><th>Consistency</th><th>Use</th></tr>
+    <tr><td>Deep Dark</td><td>French Ultramarine + Burnt Umber</td><td>Cream</td><td>Darkest darks, door recesses, deep shadow</td></tr>
+    <tr><td>Rich Dark Green</td><td>Phthalo Green BS + Burnt Umber (tiny PG7)</td><td>Cream</td><td>Dense foliage, dark vegetation</td></tr>
+    <tr><td>Warm Shadow Dark</td><td>Burnt Sienna + French Ultramarine (BS dominant)</td><td>Cream</td><td>Warm foreground shadow</td></tr>
+    <tr><td>Foreground Brick</td><td>English Venetian Red + Cadmium Red Medium</td><td>Milk–Cream</td><td>Close warm brick, terracotta</td></tr>
+    <tr><td>Deep Earth</td><td>Burnt Umber + English Venetian Red</td><td>Cream</td><td>Rich foreground earth, dark soil</td></tr>
+    <tr><td>Cool Foreground Dark</td><td>French Ultramarine + Burnt Umber + trace Phthalo Green</td><td>Cream</td><td>Near-black cool darks</td></tr>
+    <tr><td>Rich Foliage Dark</td><td>Phthalo Green BS + Burnt Sienna</td><td>Cream</td><td>Shadow foliage, dense tree mass</td></tr>
+    <tr><td>Foreground Shadow</td><td>French Ultramarine + Burnt Sienna + Quin Rose</td><td>Cream</td><td>Complex purple-brown shadow</td></tr>
+  </table>
+  <h3>Key Neutral Pairs</h3>
+  <div class="info-grid">
+    <div class="info-card warm"><h4>Ultramarine + Burnt Sienna</h4><p>Primary neutral pair. Granulates at all ratios. Near-equal = neutral chromatic gray. Blue-dominant = cool shadow. Sienna-dominant = warm earth.</p></div>
+    <div class="info-card cool"><h4>Cobalt Blue Light + Yellow Ochre</h4><p>Produces muted naturalistic greens and stone neutrals. Gentler granulation. Excellent for aged plaster, limestone, and distant foliage.</p></div>
+    <div class="info-card warm"><h4>Ultramarine + Burnt Umber</h4><p>Cooler and darker than Ultramarine/Sienna. Deep architectural shadows in overcast light. Neutral sits in a blue-gray zone.</p></div>
+    <div class="info-card cool"><h4>Quin Rose + Ultramarine</h4><p>Violet range for shadow color. From warm pink-violet to deep blue-violet. Essential for evening light and reflected sky.</p></div>
+  </div>
+</div>
+
+<!-- TAB 6: MIXING ALL PALETTES -->
+<div class="panel" id="tab-mix-all">
+  <h2>Cross-Palette Mixing</h2>
+  <p class="subtitle">When to reach beyond the primary 18 — and specific cross-palette pairs by function.</p>
+  <h3>Cross-Palette Priority Rules</h3>
+  <div class="info-grid">
+    <div class="info-card neutral"><h4>Default: Primary 18 Only</h4><p>Start here always. Mix all greens, grays, and violets from within the primary palette before reaching for any secondary or tertiary color.</p></div>
+    <div class="info-card cool"><h4>Reach for Secondary 24 when...</h4><p>The color is genuinely unmixable from primaries (e.g., strong Cerulean sky, deep Indigo night, Carbazole Violet), or the secondary color saves significant mixing time without compromising the painting.</p></div>
+    <div class="info-card warm"><h4>Reach for Tertiary 14 when...</h4><p>The subject calls for granulation that the primary palette can't provide — loose skies, water surfaces, stone texture, or experimental atmospheric work.</p></div>
+    <div class="info-card green"><h4>Never mix Phthalo (PG7/PB16) blindly</h4><p>These stain everything they touch. Add to a pool of other color, never the reverse. Rinse brush before using other colors after PG7.</p></div>
+  </div>
+  <h3>Cross-Palette Pairs by Function</h3>
+  <table class="mix-table">
+    <tr><th>Function</th><th>Primary Base</th><th>Secondary Add</th><th>Result</th></tr>
+    <tr><td>Deep violet shadow</td><td>French Ultramarine + Quin Rose</td><td>Carbazole Violet <span class="pal-badge pal-s">S</span></td><td>Deeper violet without muddying</td></tr>
+    <tr><td>Cool near-black</td><td>French Ultramarine + Burnt Umber</td><td>Indanthrone Blue <span class="pal-badge pal-s">S</span></td><td>Richer blue-black than primary pair alone</td></tr>
+    <tr><td>Complex dark</td><td>Burnt Umber + Phthalo Green</td><td>Van Dyke Brown <span class="pal-badge pal-s">S</span></td><td>Warm transparent near-black</td></tr>
+    <tr><td>Clean cerulean sky</td><td>Cobalt Blue Light</td><td>Cerulean Blue Chromium <span class="pal-badge pal-s">S</span></td><td>Granulating sky — unmixable from primary</td></tr>
+    <tr><td>Saturated orange</td><td>Quin Gold + Cadmium Red</td><td>Transparent Orange <span class="pal-badge pal-s">S</span></td><td>Purer, more luminous orange</td></tr>
+    <tr><td>Deep evening sky</td><td>French Ultramarine</td><td>Indigo <span class="pal-badge pal-s">S</span></td><td>Near-black blue for night skies</td></tr>
+    <tr><td>Moody atmosphere</td><td>Cobalt Blue Light + Yellow Ochre</td><td>Moonglow <span class="pal-badge pal-t">T</span></td><td>Granulating warm-cool atmospheric wash</td></tr>
+    <tr><td>Textured sky</td><td>French Ultramarine + Burnt Sienna</td><td>Manganese Blue <span class="pal-badge pal-t">T</span></td><td>Storm sky with heavy granulation</td></tr>
+    <tr><td>Mineral stone</td><td>Undersea Green + Burnt Umber</td><td>Diopside Genuine <span class="pal-badge pal-t">T</span></td><td>Weathered stone with natural granulation</td></tr>
+  </table>
+  <h3>Shadow Mixes Using Secondary Palette Darks</h3>
+  <table class="mix-table">
+    <tr><th>Shadow Type</th><th>Mix</th><th>Character</th></tr>
+    <tr><td>Cool blue-black shadow</td><td>Indanthrone Blue + Van Dyke Brown</td><td>Deep transparent cool dark — excellent for window recesses</td></tr>
+    <tr><td>Warm night shadow</td><td>Perylene Maroon + Indigo</td><td>Rich red-black — door frames, alley depths at dusk</td></tr>
+    <tr><td>Neutral architectural shadow</td><td>Payne's Gray + Burnt Sienna</td><td>Clean warm-leaning neutral — stone and concrete shadows</td></tr>
+    <tr><td>Foliage dark</td><td>Perylene Green + French Ultramarine</td><td>Deep chromatic near-black green — dense shadow foliage</td></tr>
+    <tr><td>Warm transparent dark</td><td>Van Dyke Brown + Indanthrone Blue</td><td>Warm-cool layering dark for transparent depth</td></tr>
+  </table>
+</div>
+
+<!-- TAB 7: URBAN SKETCHING -->
+<div class="panel" id="tab-urban">
+  <h2>Urban Sketching Subject Guide</h2>
+  <p class="subtitle">From the primary 18 unless noted. Consistency in Zbukvic clock terms.</p>
+  <h3>Sky</h3>
+  <table class="mix-table">
+    <tr><th>Condition</th><th>Mix</th><th>Consistency</th></tr>
+    <tr><td>Clear blue (top)</td><td>Cobalt Blue Light, pure</td><td>Coffee–Milk</td></tr>
+    <tr><td>Clear blue (horizon)</td><td>Cobalt Blue Light + trace Buff Titanium</td><td>Tea</td></tr>
+    <tr><td>Cerulean sky</td><td>Cerulean Blue Chromium <span class="pal-badge pal-s">S</span></td><td>Milk</td></tr>
+    <tr><td>Warm overcast</td><td>Burnt Sienna + French Ultramarine (BS dominant)</td><td>Coffee</td></tr>
+    <tr><td>Cool overcast</td><td>French Ultramarine + Burnt Sienna (FU dominant)</td><td>Coffee</td></tr>
+    <tr><td>Sunset warm</td><td>Quin Gold + Quin Rose + Buff Titanium</td><td>Coffee</td></tr>
+    <tr><td>Storm sky</td><td>French Ultramarine + Burnt Sienna + Manganese Blue <span class="pal-badge pal-t">T</span></td><td>Milk</td></tr>
+  </table>
+  <h3>Brick &amp; Masonry</h3>
+  <table class="mix-table">
+    <tr><th>Surface</th><th>Mix</th><th>Notes</th></tr>
+    <tr><td>Red brick (light)</td><td>Cadmium Red Medium + Yellow Ochre</td><td>Milk — lay wash first, vary on wet</td></tr>
+    <tr><td>Red brick (shadow)</td><td>English Venetian Red + French Ultramarine</td><td>Cream — deep warm shadow</td></tr>
+    <tr><td>Old brick</td><td>Burnt Sienna + English Venetian Red + Yellow Ochre</td><td>Milk — vary ratio wet-into-wet</td></tr>
+    <tr><td>London stock brick</td><td>Yellow Ochre + Buff Titanium + trace Burnt Sienna</td><td>Milk — warm pale yellow-gray</td></tr>
+    <tr><td>Limestone</td><td>Yellow Ochre + Cobalt Blue Light + Buff Titanium</td><td>Coffee–Milk — granulating stone tone</td></tr>
+    <tr><td>Granite</td><td>French Ultramarine + Burnt Sienna + Undersea Green</td><td>Milk — wet-into-wet for mineral texture</td></tr>
+    <tr><td>Concrete (warm light)</td><td>Yellow Ochre + Buff Titanium</td><td>Coffee — thin wash</td></tr>
+    <tr><td>Concrete (shadow)</td><td>Cobalt Blue Light + Yellow Ochre + trace Quin Rose</td><td>Milk — neutral cool</td></tr>
+    <tr><td>Aged plaster</td><td>Buff Titanium + Yellow Ochre + trace Burnt Sienna</td><td>Milk — semi-opaque</td></tr>
+    <tr><td>White stucco shadow</td><td>Cobalt Blue Light + trace Burnt Sienna</td><td>Coffee — keep transparent</td></tr>
+  </table>
+  <h3>Metal &amp; Glass</h3>
+  <table class="mix-table">
+    <tr><th>Surface</th><th>Mix</th><th>Notes</th></tr>
+    <tr><td>Weathered iron</td><td>Burnt Umber + Burnt Sienna + trace Phthalo Green</td><td>Cream — dark rust</td></tr>
+    <tr><td>Painted steel (cool)</td><td>Cobalt Blue Light + Burnt Umber</td><td>Milk</td></tr>
+    <tr><td>Copper patina</td><td>Phthalo Turquoise + Yellow Ochre + Cobalt Teal</td><td>Milk</td></tr>
+    <tr><td>Window glass (day)</td><td>Cobalt Blue Light + trace French Ultramarine</td><td>Tea–Coffee — keep transparent</td></tr>
+    <tr><td>Window glass (reflective)</td><td>French Ultramarine + Burnt Sienna (near neutral)</td><td>Coffee — reflect sky color</td></tr>
+    <tr><td>Dark window recess</td><td>French Ultramarine + Burnt Umber</td><td>Cream–Butter</td></tr>
+  </table>
+  <h3>Greenery &amp; Parks</h3>
+  <table class="mix-table">
+    <tr><th>Subject</th><th>Mix</th><th>Notes</th></tr>
+    <tr><td>Spring foliage light</td><td>Hansa Yellow Light + Cobalt Teal</td><td>Milk — fresh, bright</td></tr>
+    <tr><td>Summer foliage light</td><td>Cobalt Teal + Yellow Ochre</td><td>Milk — muted naturalistic</td></tr>
+    <tr><td>Summer foliage dark</td><td>Phthalo Green BS + Burnt Sienna (tiny PG7)</td><td>Cream — very small PG7 ratio</td></tr>
+    <tr><td>Autumn foliage</td><td>Quin Gold + Burnt Sienna + English Venetian Red</td><td>Milk — wet-into-wet variation</td></tr>
+    <tr><td>Hedges/dense shrub</td><td>Undersea Green + Burnt Umber</td><td>Cream</td></tr>
+    <tr><td>Grass (sunlit)</td><td>Yellow Ochre + Cobalt Teal</td><td>Coffee–Milk</td></tr>
+    <tr><td>Grass (shadow)</td><td>French Ultramarine + Yellow Ochre + trace Burnt Umber</td><td>Milk</td></tr>
+    <tr><td>Bark / tree trunk</td><td>Burnt Umber + French Ultramarine + trace Burnt Sienna</td><td>Cream — vary wet-into-wet</td></tr>
+    <tr><td>Lichen on stone</td><td>Yellow Ochre + Cobalt Teal + Buff Titanium</td><td>Milk — semi-opaque</td></tr>
+  </table>
+  <h3>Figures &amp; Skin Tones</h3>
+  <table class="mix-table">
+    <tr><th>Tone</th><th>Mix</th><th>Notes</th></tr>
+    <tr><td>Pale skin light</td><td>Buff Titanium + trace Quin Rose + trace Yellow Ochre</td><td>Tea</td></tr>
+    <tr><td>Pale skin shadow</td><td>Cobalt Blue Light + Quin Rose + trace Buff Titanium</td><td>Coffee</td></tr>
+    <tr><td>Mid skin light</td><td>Yellow Ochre + Burnt Sienna + trace Quin Rose</td><td>Coffee</td></tr>
+    <tr><td>Mid skin shadow</td><td>Burnt Sienna + French Ultramarine</td><td>Milk</td></tr>
+    <tr><td>Dark skin light</td><td>Burnt Sienna + Burnt Umber + Yellow Ochre</td><td>Milk</td></tr>
+    <tr><td>Dark skin shadow</td><td>Burnt Umber + French Ultramarine</td><td>Cream</td></tr>
+    <tr><td>Figure silhouette</td><td>French Ultramarine + Burnt Umber</td><td>Cream–Butter</td></tr>
+  </table>
+
+  <h3>Alleyways &amp; Shadow</h3>
+  <table class="mix-table">
+    <tr><th>Subject</th><th>Mix</th><th>Notes</th></tr>
+    <tr><td>Neutral cast shadow</td><td>French Ultramarine + Burnt Sienna (near-balanced)</td><td>Milk — granulates; more blue = cooler</td></tr>
+    <tr><td>Cool cast shadow</td><td>French Ultramarine 3:1 Quin Rose + trace Burnt Umber</td><td>Violet-grey shadow on pale pavement or white walls</td></tr>
+    <tr><td>Warm ground shadow</td><td>Burnt Sienna 1:1 French Ultramarine + touch Yellow Ochre</td><td>Shadow on ochre pavement or warm stone</td></tr>
+    <tr><td>Purple architectural shadow</td><td>French Ultramarine 2:1 Quin Rose</td><td>Niches, arched passages, deep overhangs</td></tr>
+    <tr><td>Warm deep shadow</td><td>Burnt Umber 3:1 Venetian Red + trace French Ultramarine</td><td>Dense foreground doorways and recesses</td></tr>
+    <tr><td>Shadow on brick</td><td>Venetian Red 1:2 French Ultramarine</td><td>Retains brick's red identity — not a neutral</td></tr>
+    <tr><td>Shadow on plaster</td><td>Cobalt Blue Light 2:1 Quin Rose + trace Buff Titanium</td><td>Delicate cool shadow — keep transparent</td></tr>
+    <tr><td>Shadow on pavement</td><td>Cobalt Blue Light 1:1 Burnt Umber + trace French Ultramarine</td><td>Neutral shadow on grey paving</td></tr>
+  </table>
+
+  <h3>Deep Darks — Doorways, Recesses, Tunnels</h3>
+  <table class="mix-table">
+    <tr><th>Subject</th><th>Mix</th><th>Notes</th></tr>
+    <tr><td>Standard deep dark</td><td>French Ultramarine 2:1 Burnt Umber</td><td>Cream — most versatile dark; ratio controls warm/cool</td></tr>
+    <tr><td>Richest near-black</td><td>Burnt Umber 1:1 French Ultramarine + Alizarin Crimson</td><td>Three-pigment dark with subtle warmth — deepest interior shadow</td></tr>
+    <tr><td>Warm doorway dark</td><td>Burnt Umber 3:1 Venetian Red + trace French Ultramarine</td><td>Suggests interior warmth beyond the door</td></tr>
+    <tr><td>Cool tunnel dark</td><td>French Ultramarine 3:1 Burnt Umber + trace Phthalo Green BS</td><td>Cold, slightly green dark for underpasses — tiny PG7</td></tr>
+    <tr><td>Phthalo deep accent</td><td>Phthalo Green BS trace + Burnt Umber 5:1</td><td>Butter — near-black with cold cast; final accent only</td></tr>
+    <tr><td>Bloodstone crevice</td><td>Bloodstone Genuine 2:1 Burnt Umber</td><td>Granulating earthy dark for stone crevices and aged mortar</td></tr>
+  </table>
+
+  <h3>Alleyway Surfaces — Wet Ground, Puddles, Cobbles</h3>
+  <table class="mix-table">
+    <tr><th>Subject</th><th>Mix</th><th>Notes</th></tr>
+    <tr><td>Wet cobblestone</td><td>French Ultramarine 1:1 Burnt Sienna, dilute</td><td>Keep loose; drop Buff Titanium wet-in-wet for sky reflection</td></tr>
+    <tr><td>Puddle sky reflection</td><td>Cobalt Blue Light 2:1 French Ultramarine, very dilute</td><td>Slightly darker than actual sky</td></tr>
+    <tr><td>Puddle warm reflection</td><td>Burnt Sienna 1:1 Quin Gold, very dilute</td><td>Warm building reflection — gold light, warm facade</td></tr>
+    <tr><td>Damp alley floor</td><td>Burnt Umber 1:1 Cobalt Blue Light + trace Yellow Ochre</td><td>Damp but not wet — neutral and slightly grimy</td></tr>
+    <tr><td>Mossy cobble</td><td>Yellow Ochre 1:1 Phthalo Green BS trace + Burnt Umber touch</td><td>Organic moss between paving stones — earthy, muted green</td></tr>
+    <tr><td>Gutter / drain</td><td>Burnt Umber 2:1 French Ultramarine, concentrated</td><td>Dark gutter line and drain shadow — narrow, linear application</td></tr>
+  </table>
+
+  <h3>Walls — Grime, Age, Decay</h3>
+  <table class="mix-table">
+    <tr><th>Surface</th><th>Mix</th><th>Notes</th></tr>
+    <tr><td>Grimy brick</td><td>Venetian Red 1:1 Burnt Umber + trace French Ultramarine</td><td>Less red, more brown than clean brick</td></tr>
+    <tr><td>Sooted wall</td><td>Burnt Umber 2:1 French Ultramarine + trace Yellow Ochre</td><td>Carbon-stained wall above a doorway or vent — warm-dark and matte</td></tr>
+    <tr><td>Efflorescence / salt bloom</td><td>Buff Titanium 3:1 Cobalt Blue Light, very dilute, dry brush</td><td>White salt deposits — light dry-brush over dried base</td></tr>
+    <tr><td>Mold / damp stain</td><td>Burnt Umber 1:1 Phthalo Green BS trace + French Ultramarine, dilute</td><td>Organic staining — drop wet-in-wet; tiny PG7</td></tr>
+    <tr><td>Peeling plaster</td><td>Buff Titanium 2:1 Yellow Ochre over Venetian Red base</td><td>Paint brick first, dry, then lift or leave gaps in pale over-layer</td></tr>
+    <tr><td>Graffiti base tone</td><td>Quin Rose or Cobalt Teal, straight from pan</td><td>Bright graphic mark — most saturated pigments at full strength</td></tr>
+  </table>
+
+  <h3>Metal, Wood &amp; Urban Detritus</h3>
+  <table class="mix-table">
+    <tr><th>Subject</th><th>Mix</th><th>Notes</th></tr>
+    <tr><td>Wrought iron gate</td><td>Burnt Umber 2:1 French Ultramarine</td><td>Reserve paper for highlights</td></tr>
+    <tr><td>Rusty iron</td><td>Burnt Sienna 2:1 Cadmium Red Medium + trace Burnt Umber</td><td>Most vivid in foreground, muted at distance</td></tr>
+    <tr><td>Painted iron, dark green</td><td>Phthalo Green BS trace + Burnt Umber 3:1</td><td>Deep bottle green — common painted railings</td></tr>
+    <tr><td>Painted iron, black</td><td>Burnt Umber 1:1 French Ultramarine, concentrated</td><td>Near-black with slight warm-cool variation across surface</td></tr>
+    <tr><td>Weathered timber door</td><td>Burnt Sienna 2:1 Yellow Ochre + trace Burnt Umber</td><td>Warm mid-tone for aged timber doors and frames</td></tr>
+    <tr><td>Painted wood, peeling</td><td>Cobalt Blue Light 2:1 Buff Titanium over Burnt Sienna base</td><td>Paint warm base, let dry, add cool over-layer with gaps</td></tr>
+  </table>
+</div>
+
+<!-- TAB 8: LANDSCAPE -->
+<div class="panel" id="tab-landscape">
+  <h2>Landscape Painting Guide</h2>
+  <p class="subtitle">Organized by sky, trees, ground, and atmospheric conditions.</p>
+  <h3>Sky Gradations</h3>
+  <table class="mix-table">
+    <tr><th>Sky Type</th><th>Method</th><th>Colors</th><th>Consistency</th></tr>
+    <tr><td>Flat clear blue</td><td>Single wash, wet paper</td><td>Cobalt Blue Light, pure</td><td>Coffee — uniform</td></tr>
+    <tr><td>Graded blue</td><td>Tilt board, blue to dilute</td><td>Cobalt Blue Light → Tea wash</td><td>Coffee to Tea</td></tr>
+    <tr><td>Warm-cool graduated</td><td>Wet paper, float colors</td><td>Top: Cobalt/FU — bottom: Quin Gold + Buff Titanium</td><td>Coffee</td></tr>
+    <tr><td>Overcast flat</td><td>Single wet wash</td><td>Burnt Sienna + French Ultramarine (warm neutral)</td><td>Coffee</td></tr>
+    <tr><td>Dramatic storm</td><td>Wet-into-wet with tilting</td><td>FU + BS + Manganese Blue <span class="pal-badge pal-t">T</span></td><td>Milk — let granulation work</td></tr>
+  </table>
+  <h3>Trees &amp; Vegetation</h3>
+  <table class="mix-table">
+    <tr><th>Type</th><th>Light mass</th><th>Shadow mass</th><th>Notes</th></tr>
+    <tr><td>Deciduous (summer)</td><td>Cobalt Teal + Yellow Ochre</td><td>Phthalo Green + Burnt Sienna</td><td>Wet-into-wet; shape with negative space</td></tr>
+    <tr><td>Deciduous (spring)</td><td>Hansa Yellow Light + Cobalt Teal</td><td>French Ultramarine + Yellow Ochre</td><td>Yellower, fresher than summer</td></tr>
+    <tr><td>Conifer / dark evergreen</td><td>Undersea Green + Yellow Ochre</td><td>Burnt Umber + Phthalo Green</td><td>Build shape from negative painting</td></tr>
+    <tr><td>Autumn trees</td><td>Quin Gold + Cadmium Red + Yellow Ochre</td><td>Burnt Sienna + French Ultramarine</td><td>Vary colors wet-into-wet</td></tr>
+    <tr><td>Winter bare trees</td><td>Burnt Umber (dilute)</td><td>French Ultramarine + Burnt Umber</td><td>Dry brush for fine branches</td></tr>
+    <tr><td>Foreground grasses</td><td>Yellow Ochre + Cobalt Teal</td><td>French Ultramarine + Yellow Ochre</td><td>Vary warm/cool within same passage</td></tr>
+  </table>
+  <h3>Ground &amp; Earth</h3>
+  <table class="mix-table">
+    <tr><th>Surface</th><th>Mix</th><th>Consistency</th></tr>
+    <tr><td>Dry earth / path</td><td>Yellow Ochre + Burnt Sienna + Buff Titanium</td><td>Milk</td></tr>
+    <tr><td>Wet earth</td><td>Burnt Umber + French Ultramarine</td><td>Cream</td></tr>
+    <tr><td>Rocky foreground</td><td>Burnt Umber + Undersea Green + Bloodstone Genuine</td><td>Milk — wet-into-wet for texture</td></tr>
+    <tr><td>Sand (sunlit)</td><td>Yellow Ochre + Buff Titanium</td><td>Coffee</td></tr>
+    <tr><td>Shadow on ground</td><td>French Ultramarine + Burnt Sienna (cool)</td><td>Milk</td></tr>
+  </table>
+</div>
+
+<!-- TAB 9: WATER & NIGHT -->
+<div class="panel" id="tab-water-night">
+  <h2>Water &amp; Night Scenes</h2>
+  <h3>Water — Rivers, Canals &amp; Harbours</h3>
+  <table class="mix-table">
+    <tr><th>Condition</th><th>Mix</th><th>Consistency</th><th>Notes</th></tr>
+    <tr><td>Calm reflective water</td><td>Sky colors darkened, French Ultramarine dominant</td><td>Milk</td><td>Horizontal strokes only; value slightly darker than sky</td></tr>
+    <tr><td>Moving rippled water</td><td>Cobalt Blue Light + trace Burnt Sienna</td><td>Coffee–Milk</td><td>Leave white paper for highlights; broken horizontal marks</td></tr>
+    <tr><td>Dark river (overcast)</td><td>French Ultramarine + Burnt Umber</td><td>Cream</td><td>Vary value slightly; broken edge for ripples</td></tr>
+    <tr><td>Harbour / tidal mud</td><td>Yellow Ochre + Burnt Sienna + French Ultramarine</td><td>Milk</td><td>Warm mud tone — wet-into-wet variation</td></tr>
+    <tr><td>Canal shadow under bridge</td><td>French Ultramarine + Burnt Umber (near neutral)</td><td>Cream–Butter</td><td>Darkest value in composition</td></tr>
+    <tr><td>Green algal water</td><td>Phthalo Turquoise + Yellow Ochre + trace French Ultramarine</td><td>Milk</td><td>Tiny PB16 — dominates fast</td></tr>
+  </table>
+  <h3>Reflections</h3>
+  <table class="mix-table">
+    <tr><th>Rule</th><th>Application</th></tr>
+    <tr><td>Water slightly darker than reflected subject</td><td>Add more pigment to reflection mix vs. original wash</td></tr>
+    <tr><td>Warm light reflects warm; cool reflects cool</td><td>Don't neutralize reflections — keep their temperature</td></tr>
+    <tr><td>Reflections lose chroma in motion</td><td>Add complement or near-neutral to reflection mixes for rippled water</td></tr>
+    <tr><td>Horizontal strokes only</td><td>Even vertical subjects (masts, buildings) reflect in horizontal bands</td></tr>
+    <tr><td>Broken edges suggest movement</td><td>Work into slightly damp paper for soft reflections; dry for crisp</td></tr>
+  </table>
+  <h3>Puddles &amp; Wet Pavement</h3>
+  <table class="mix-table">
+    <tr><th>Subject</th><th>Mix</th><th>Notes</th></tr>
+    <tr><td>Wet cobblestone</td><td>Burnt Sienna + French Ultramarine</td><td>Lay flat wash; pull out reflected sky while wet</td></tr>
+    <tr><td>Puddle sky reflection</td><td>Cobalt Blue Light + trace Quin Rose</td><td>Float into wet pavement wash</td></tr>
+    <tr><td>Wet asphalt</td><td>French Ultramarine + Burnt Umber + trace Yellow Ochre</td><td>Milk — darker than dry asphalt</td></tr>
+    <tr><td>Puddle highlight</td><td>Reserve white paper or lift</td><td>Work around — don't paint highlights</td></tr>
+  </table>
+  <h3>Night &amp; Artificial Light</h3>
+  <table class="mix-table">
+    <tr><th>Condition</th><th>Mix</th><th>Consistency</th><th>Notes</th></tr>
+    <tr><td>Night sky (clear)</td><td>French Ultramarine + Burnt Umber + trace Quin Rose</td><td>Cream</td><td>Rich near-black; leave pinhole whites</td></tr>
+    <tr><td>Night sky (urban glow)</td><td>French Ultramarine + Quin Rose + trace Yellow Ochre</td><td>Milk–Cream</td><td>Warm purple-brown glow above city</td></tr>
+    <tr><td>Dusk warm sky</td><td>Quin Gold + Quin Rose + trace Cobalt Blue Light</td><td>Coffee–Milk</td><td>Wet-into-wet, tilt board</td></tr>
+    <tr><td>Sodium streetlight</td><td>Yellow Ochre + Quin Gold</td><td>Coffee</td><td>Warm amber pool — float onto dark street</td></tr>
+    <tr><td>LED streetlight</td><td>Buff Titanium + trace Cobalt Blue Light</td><td>Coffee</td><td>Cool white — reserve or lift</td></tr>
+    <tr><td>Neon sign glow</td><td>Quin Rose or Quin Gold (pure)</td><td>Coffee — let bleed into dark</td><td>Wet dark wash, drop in pure color</td></tr>
+    <tr><td>Lit window (warm)</td><td>Quin Gold + Cadmium Yellow Light</td><td>Milk — float into dark surround</td><td>Reserve paper shape, paint surround first</td></tr>
+    <tr><td>Lit window (cool)</td><td>Cobalt Blue Light + trace Buff Titanium</td><td>Milk</td><td>Blue-white in dark wall</td></tr>
+    <tr><td>Night shadow (warm)</td><td>French Ultramarine + Burnt Sienna (BS dominant)</td><td>Cream</td><td>Warm purple-brown near-black</td></tr>
+    <tr><td>Night shadow (cool)</td><td>French Ultramarine + Burnt Umber</td><td>Cream</td><td>Cool blue-black</td></tr>
+    <tr><td>Shopfront spill on pavement</td><td>Yellow Ochre + Quin Gold + trace French Ultramarine</td><td>Milk</td><td>Muted warm glow on wet pavement</td></tr>
+    <tr><td>Headlights on wet street</td><td>Reserve white paper; surround with French Ultramarine + Burnt Umber</td><td>Cream</td><td>The light is the paper — paint the dark around it; add trace Quin Gold for warmth in the beam</td></tr>
+  </table>
+</div>
+
+<!-- TAB 10: FIVE-MIXTURE -->
+<div class="panel" id="tab-five-mix">
+  <h2>Five-Mixture System</h2>
+  <p class="subtitle">Two parent colors yield five distinct mixtures across their ratio range: pure A · warm-dominant neutral · optimum neutral · cool-dominant neutral · pure B.</p>
+  <div class="mixture-pair">
+    <h3>Pair 1 — French Ultramarine + Burnt Sienna</h3>
+    <p>Primary neutral pair. Granulates at all ratios. Most useful pair on the palette for architectural and landscape work.</p>
+    <div class="strip">
+      <div class="strip-seg" style="background:#904820"></div>
+      <div class="strip-seg" style="background:#7a5028"></div>
+      <div class="strip-seg" style="background:#5a5048"></div>
+      <div class="strip-seg" style="background:#3a4068"></div>
+      <div class="strip-seg" style="background:#283898"></div>
+    </div>
+    <div class="strip-label"><span>Pure Burnt Sienna</span><span>Warm neutral</span><span>Optimum neutral</span><span>Cool neutral</span><span>Pure Ultramarine</span></div>
+    <table class="mix-table" style="margin-top:12px">
+      <tr><th>Position</th><th>Character</th><th>Use</th></tr>
+      <tr><td>Pure BS</td><td>Warm transparent earth</td><td>Underpainting, warm passages, skin</td></tr>
+      <tr><td>Warm neutral</td><td>Warm chromatic gray-brown</td><td>Sunlit stone, warm architectural shadow</td></tr>
+      <tr><td>Optimum neutral</td><td>Granulating chromatic gray</td><td>Stone, concrete, aged timber</td></tr>
+      <tr><td>Cool neutral</td><td>Cool blue-gray</td><td>Overcast shadow, distant architecture</td></tr>
+      <tr><td>Pure FU</td><td>Warm granulating blue</td><td>Sky, water, violet mixes</td></tr>
+    </table>
+  </div>
+  <div class="mixture-pair">
+    <h3>Pair 2 — French Ultramarine + Burnt Umber</h3>
+    <p>Cooler and darker than Pair 1. Neutral zone sits in a blue-gray shadow register. Better for deep architectural shadows and overcast conditions.</p>
+    <div class="strip">
+      <div class="strip-seg" style="background:#402818"></div>
+      <div class="strip-seg" style="background:#3a3028"></div>
+      <div class="strip-seg" style="background:#2a2c38"></div>
+      <div class="strip-seg" style="background:#1e2450"></div>
+      <div class="strip-seg" style="background:#283898"></div>
+    </div>
+    <div class="strip-label"><span>Pure Burnt Umber</span><span>Warm neutral</span><span>Optimum neutral</span><span>Cool neutral</span><span>Pure Ultramarine</span></div>
+  </div>
+  <div class="mixture-pair">
+    <h3>Pair 3 — Cobalt Blue Light + Yellow Ochre</h3>
+    <p>Muted naturalistic greens and stone neutrals. Gentler granulation than Ultramarine pairs. Lower tinting strength = easier control.</p>
+    <div class="strip">
+      <div class="strip-seg" style="background:#C8902A"></div>
+      <div class="strip-seg" style="background:#9a9040"></div>
+      <div class="strip-seg" style="background:#708858"></div>
+      <div class="strip-seg" style="background:#4878a0"></div>
+      <div class="strip-seg" style="background:#5888C8"></div>
+    </div>
+    <div class="strip-label"><span>Pure Yellow Ochre</span><span>Warm muted green</span><span>Naturalistic green</span><span>Cool muted green</span><span>Pure Cobalt Blue</span></div>
+    <table class="mix-table" style="margin-top:12px">
+      <tr><th>Position</th><th>Character</th><th>Use</th></tr>
+      <tr><td>Near-Ochre</td><td>Warm khaki / dusty yellow-green</td><td>Dry grass, tawny hillside</td></tr>
+      <tr><td>Warm neutral</td><td>Muted olive-stone</td><td>Limestone, warm aged plaster</td></tr>
+      <tr><td>Optimum neutral</td><td>Muted naturalistic green</td><td>Distant trees, park hedges, meadow</td></tr>
+      <tr><td>Cool neutral</td><td>Muted cool green</td><td>Shaded foliage, cooler distance</td></tr>
+    </table>
+  </div>
+  <div class="mixture-pair">
+    <h3>Pair 4 — Quinacridone Rose + French Ultramarine</h3>
+    <p>Violet range for shadow color and evening light. Both transparent — mixes stay clean.</p>
+    <div class="strip">
+      <div class="strip-seg" style="background:#E05878"></div>
+      <div class="strip-seg" style="background:#b04888"></div>
+      <div class="strip-seg" style="background:#7848a8"></div>
+      <div class="strip-seg" style="background:#4838b0"></div>
+      <div class="strip-seg" style="background:#283898"></div>
+    </div>
+    <div class="strip-label"><span>Pure Quin Rose</span><span>Warm violet</span><span>Mid violet</span><span>Cool violet</span><span>Pure Ultramarine</span></div>
+    <table class="mix-table" style="margin-top:12px">
+      <tr><th>Position</th><th>Use</th></tr>
+      <tr><td>Warm violet / red-violet</td><td>Evening light, sunset sky upper register, reflected warm shadow</td></tr>
+      <tr><td>Mid violet</td><td>Atmospheric violet shadow, evening architecture</td></tr>
+      <tr><td>Cool violet</td><td>Deep shadow in evening light, cool violet reflected in wet streets</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- TAB 11: ZBUKVIC -->
+<div class="panel" id="tab-zbukvic">
+  <h2>Zbukvic Framework</h2>
+  <p class="subtitle">From <em>Mastering Atmosphere and Mood in Watercolor</em> by Joseph Zbukvic. Applied to this palette system.</p>
+  <h3>The Watercolor Clock — Consistency Levels</h3>
+  <table class="clock-table">
+    <tr><td>Tea<br><span style="font-size:10px;color:#888">also: Watery</span></td><td>Weakest transparent wash. Lightest tone — misty, atmospheric. Runs freely on tilted palette. Use for far distance, first washes on damp paper, gentle backgrounds.</td></tr>
+    <tr><td>Coffee</td><td>Strong translucent color — bright and light-filled. Quarter-tone wash. Use for background/sky washes, light shadow fill, underpainting.</td></tr>
+    <tr><td>Milk<br><span style="font-size:10px;color:#888">also: Juicy</span></td><td>Half-tone — the most frequently used consistency. Moves slowly on tilted palette. Use for most midground work, architectural surfaces, foliage masses.</td></tr>
+    <tr><td>Cream<br><span style="font-size:10px;color:#888">also: Pasty</span></td><td>Three-quarter tone — strongest color notes. Barely moves on tilted palette. Use for foreground darks, saturated accents, shadow passages.</td></tr>
+    <tr><td>Butter</td><td>Full tone — no water. Sticks to palette. Reserve for the very last marks only: darkest darks, stop-lights, small figures, final accents.</td></tr>
+  </table>
+  <h3>Paper States &amp; Edge Control</h3>
+  <div class="info-grid">
+    <div class="info-card neutral"><h4>Dry Paper</h4><p>Hard-edged shapes, dry-brush texture, drawing and scraping, architectural lines. The time for sharp effects.</p></div>
+    <div class="info-card cool"><h4>Damp Paper</h4><p>Broken edges, lifting pigment, scratching out soft texture.</p></div>
+    <div class="info-card warm"><h4>Moist Paper</h4><p>Soft controlled shapes. Best for misting effects, shaping and blending. Still directional.</p></div>
+    <div class="info-card green"><h4>Wet Paper</h4><p>Soft, lost, or uncontrolled edges. Pure atmosphere. Minimal control — respond to what the paper does.</p></div>
+  </div>
+  <h3>Four Pillars — Ranked by Importance</h3>
+  <div class="info-grid">
+    <div class="info-card warm"><h4>1. Drawing &amp; Composition</h4><p>The foundation. Compositional decisions made before painting determine everything else. Work out the design with concept words and notan thumbnails first.</p></div>
+    <div class="info-card neutral"><h4>2. Tonal Value</h4><p>Value does more work than color. A painting with correct values reads clearly; one with correct color but wrong values fails. Work strictly light to dark.</p></div>
+    <div class="info-card cool"><h4>3. Edges</h4><p>Edges direct the eye and create mood. Hard edges advance; soft edges recede. Use paper dampness (clock) to control edge character.</p></div>
+    <div class="info-card green"><h4>4. Color</h4><p>Color is the last pillar — least important, most discussed. A correct color in the wrong value does not fix a painting. Choose a Mother Color and subordinate everything to it.</p></div>
+  </div>
+  <h3>Three Mood Scales</h3>
+  <div class="info-grid">
+    <div class="info-card warm"><h4>Soft &amp; Hazy</h4><p>Wet paper throughout. Tea and Coffee dominance. Lost edges, atmospheric blur, high-key values. Mist, fog, rain, soft morning light.</p></div>
+    <div class="info-card neutral"><h4>Medium Mellow</h4><p>Mixed paper states. Coffee to Cream range. Some hard edges against soft. The majority of urban sketches. Sun in clouds, afternoon city light.</p></div>
+    <div class="info-card cool"><h4>Sharp Staccato</h4><p>Dry paper dominance. Milk to Butter range. Maximum contrast, hard edges everywhere. Bright midday sun, strong directional light, dramatic architectural scenes.</p></div>
+  </div>
+  <h3>Mother Color Concept</h3>
+  <p style="margin-bottom:16px">One dominant color or temperature unifies the painting. All other colors are subordinated to it. Chosen before painting begins.</p>
+  <table class="mix-table">
+    <tr><th>Condition</th><th>Mother Color</th><th>Primary Pigments</th></tr>
+    <tr><td>Warm afternoon sun</td><td>Yellow-orange warmth</td><td>Quin Gold · Yellow Ochre · Burnt Sienna</td></tr>
+    <tr><td>Cool overcast</td><td>Blue-gray neutrality</td><td>Cobalt Blue Light · French Ultramarine · Burnt Sienna</td></tr>
+    <tr><td>Evening / golden hour</td><td>Violet-gold</td><td>Quin Rose · French Ultramarine · Quin Gold</td></tr>
+    <tr><td>Misty / foggy</td><td>Diffused blue-gray</td><td>Cobalt Blue Light · Buff Titanium · Yellow Ochre</td></tr>
+    <tr><td>Strong midday sun</td><td>High-contrast warm-cool</td><td>Cobalt Blue Light (sky) / Burnt Sienna (shadow)</td></tr>
+  </table>
+  <h3>Field Protocol — Pre-Sketch Sequence</h3>
+  <div class="info-grid">
+    <div class="info-card warm"><h4>1. Concept Words (before drawing)</h4><p>Write 3–5 words describing the feeling, not the content. Drive all subsequent decisions. Evaluate the finished sketch against these words.</p></div>
+    <div class="info-card neutral"><h4>2. Notan Thumbnail</h4><p>2-minute value sketch — two tones only. Work out the composition. Decide what stays white before touching the paper.</p></div>
+    <div class="info-card cool"><h4>3. Identify Mother Color &amp; Mood Scale</h4><p>Which of the three mood scales fits? What is the dominant color temperature? Commit before mixing anything.</p></div>
+    <div class="info-card green"><h4>4. Evaluate &amp; Compress</h4><p>What can be simplified? Ruthless selectivity — every element included is a decision. What does not serve the concept words does not belong in the painting.</p></div>
+  </div>
+  <div class="info-card neutral" style="margin-top:12px"><h4>Painting Sequence — Light to Dark</h4><p>Always light to dark, transparent before opaque. Sky first, then distance, midground, foreground. Never revisit a passage until fully dry. Consistency sequence moves Tea → Butter as the painting advances — never in reverse.</p></div>
+</div>
+
+<!-- TAB 12: BRUSHES -->
+<div class="panel" id="tab-brushes">
+  <h2>Brush Inventory</h2>
+  <p class="subtitle">Full inventory across travel and studio collections. Organized by set. Hair type, primary uses, and field notes for each brush.</p>
+
+  <div class="brush-section-head">Travel Kit <span class="brush-section-sub">Rosemary &amp; Co. — Travel Line (9 brushes)</span></div>
+  <div class="brush-intro">The core of the travel kit. All Rosemary &amp; Co. travel series — screw-cap or retractable handles. Spans sable, squirrel mop, and specialty shapes. Widely regarded as the best value-to-quality travel brush line available.</div>
+  <table class="brush-table">
+    <thead><tr><th>Brush</th><th>Brand / Series</th><th>Hair</th><th>Primary Uses</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="col-brush">Round #12</td>
+        <td class="col-brand">Rosemary &amp; Co. · Travel</td>
+        <td class="col-hair">Red sable blend</td>
+        <td class="col-use"><span class="btag btag-wash">large wash</span><span class="btag btag-detail">general</span> Primary large travel round. Sky washes, building facades, large ground passages at A4–A3. Fine point handles detail work despite size. Jane Blundell's go-to recommendation — can handle an entire sketch solo.</td>
+        <td class="col-note">Workhorse of the travel kit; first brush on paper in most sessions</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Round #8</td>
+        <td class="col-brand">Rosemary &amp; Co. · Travel</td>
+        <td class="col-hair">Red sable blend</td>
+        <td class="col-use"><span class="btag btag-wash">mid wash</span><span class="btag btag-detail">detail</span> Workhorse size for sub-A3 work. Building facades, vehicle bodies, mid-ground foliage. Point handles figure outlines, small windows, signage at A4–A5.</td>
+        <td class="col-note">Covers A5–A4 beautifully; pairs with #12 for full range</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Dagger</td>
+        <td class="col-brand">Rosemary &amp; Co. · Travel</td>
+        <td class="col-hair">Red sable blend</td>
+        <td class="col-use"><span class="btag btag-edge">edges</span><span class="btag btag-detail">calligraphic</span> Fine tip for windows and railings; diagonal edge for roof tiles, brickwork, foliage clusters. Twist-through stroke for tapered calligraphic marks. Bridges detail and wash roles.</td>
+        <td class="col-note">High versatility — can handle an entire urban sketch solo</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Squirrel Mop</td>
+        <td class="col-brand">Rosemary &amp; Co. · R9 (Series 42)</td>
+        <td class="col-hair">Pure squirrel</td>
+        <td class="col-use"><span class="btag btag-quill">mop wash</span><span class="btag btag-edge">soft edges</span> Sky washes, granulating wet-into-wet passages, large atmospheric grounds. High water capacity releases paint evenly — ideal for FU + BS neutral sky mixes at Milk/Cream. Low snap means it doesn't fight the paper.</td>
+        <td class="col-note">Soft — no spring. Use before detail work, not after</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Pointed Round #8</td>
+        <td class="col-brand">Rosemary &amp; Co. · R13 (Series 402)</td>
+        <td class="col-hair">Red sable blend designer (extra point)</td>
+        <td class="col-use"><span class="btag btag-detail">fine detail</span><span class="btag btag-line">drawing with brush</span> Extended fine point allows "drawing" with a loaded brush — figure outlines, iron railings, tree branches, storefront lettering. Longer point than a standard round; bridges round and rigger. Good for Zbukvic-style calligraphic marks.</td>
+        <td class="col-note">Series 402 has a noticeably longer, finer tip than Series 33/99</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Rigger</td>
+        <td class="col-brand">Rosemary &amp; Co. · R5 (Series 88)</td>
+        <td class="col-hair">Pure Kolinsky sable</td>
+        <td class="col-use"><span class="btag btag-line">long lines</span><span class="btag btag-detail">fine marks</span> Long continuous strokes: masts, cables, power lines, grille work, window mullions, branch networks. High water reservoir for uninterrupted line. Pressure variation produces thick-to-thin calligraphic lines.</td>
+        <td class="col-note">Pure Kolinsky — best snap and line control of any rigger in the collection</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Quarter-Inch One Stroke</td>
+        <td class="col-brand">Rosemary &amp; Co. · Travel</td>
+        <td class="col-hair">Red sable blend</td>
+        <td class="col-use"><span class="btag btag-wash">flat wash</span><span class="btag btag-edge">crisp edges</span> Clean architectural strokes: window panes, door panels, brick courses, ruled shadow lines. Corner cuts hard edges without masking fluid. Consistent-width flat strokes.</td>
+        <td class="col-note">Quarter-inch width ideal for sub-A3 architectural detail</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Eradicator</td>
+        <td class="col-brand">Rosemary &amp; Co. · Travel</td>
+        <td class="col-hair">Stiff synthetic</td>
+        <td class="col-use"><span class="btag btag-lift">lifting</span><span class="btag btag-edge">softening</span> Controlled lifting in the field — highlights, cloud edges, texture, corrections. More precise than a bristle scrubber. Travel version of the studio eradicator.</td>
+        <td class="col-note">Primary field lifting tool; the only correction brush in the travel kit</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Custom Sword Liner</td>
+        <td class="col-brand">Rosemary &amp; Co. · Custom</td>
+        <td class="col-hair">Custom — verify hair type</td>
+        <td class="col-use"><span class="btag btag-line">linework</span><span class="btag btag-detail">calligraphic</span> Trees, branches, gestural foliage, grille work, expressive architectural lines. Twist-through stroke produces tapered calligraphic marks. Described as "rigger and flat in one."</td>
+        <td class="col-note">Custom — confirm exact hair type. Longer reach than dagger for detailed passages</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="brush-section-head"><span class="brush-section-sub">Borciani Bonazzi — Il Doppio Travel Brush #1 (dual-tip)</span></div>
+  <div class="brush-intro">Italian-made dual-tip travel brush. MKS® Synthetic Kolinsky hair — premium synthetic with strong snap and good water-holding. Two working tips on one retractable handle.</div>
+  <table class="brush-table">
+    <thead><tr><th>Tip</th><th>Brand / Series</th><th>Hair</th><th>Primary Uses</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="col-brush">Round #10<span class="dual-note">Tip A</span></td>
+        <td class="col-brand">B&amp;B · Il Doppio #1</td>
+        <td class="col-hair">MKS® Synthetic Kolinsky</td>
+        <td class="col-use"><span class="btag btag-wash">mid–large wash</span><span class="btag btag-detail">mid detail</span> Primary painting tip. Buildings, sky, mid-ground foliage, figure masses at A4–A3. Fine point capable of detail work despite size. Better snap than squirrel synthetic.</td>
+        <td class="col-note">Italian synthetic Kolinsky — notably good snap for a synthetic</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Dagger / Liner<span class="dual-note">Tip B</span></td>
+        <td class="col-brand">B&amp;B · Il Doppio #1</td>
+        <td class="col-hair">MKS® Synthetic Kolinsky</td>
+        <td class="col-use"><span class="btag btag-edge">edges</span><span class="btag btag-line">linework</span><span class="btag btag-detail">calligraphic</span> Detail and edge tip. Rooflines, window frames, figure outlines, foliage edges. Twist stroke for variable-width calligraphic marks.</td>
+        <td class="col-note">Verify exact tip shape on your unit — Il Doppio #1 ships with dagger or liner depending on version</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="brush-section-head"><span class="brush-section-sub">da Vinci — Travel Round (1 brush)</span></div>
+  <table class="brush-table">
+    <thead><tr><th>Brush</th><th>Brand / Series</th><th>Hair</th><th>Primary Uses</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="col-brush">Round #6</td>
+        <td class="col-brand">da Vinci · Travel</td>
+        <td class="col-hair"><span class="flag-verify-blue">verify series</span> Maestro = Kolinsky / Cosmotop Spin = synthetic squirrel</td>
+        <td class="col-use"><span class="btag btag-detail">detail</span><span class="btag btag-wash">small–mid wash</span> Versatile mid-size travel round. Figures, vehicles, tree canopies, secondary architectural detail at A5–A4. Point handles window panes, shadow edges, small-scale lettering.</td>
+        <td class="col-note">Confirm series — Maestro (Kolinsky) and Cosmotop Spin (synthetic squirrel) behave very differently</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="brush-section-head"><span class="brush-section-sub">Fuumuui — Sable Travel Rounds (3 brushes)</span></div>
+  <div class="brush-intro">Kolinsky sable. Screw-cap travel handles. Primary travel set for sub-A4 urban sketching. Strong snap and water-holding relative to price.</div>
+  <table class="brush-table">
+    <thead><tr><th>Brush</th><th>Brand / Series</th><th>Hair</th><th>Primary Uses</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="col-brush">Round #12</td>
+        <td class="col-brand">Fuumuui · Sable Travel</td>
+        <td class="col-hair">Kolinsky sable</td>
+        <td class="col-use"><span class="btag btag-wash">large wash</span><span class="btag btag-detail">general</span> Primary workhorse. Sky passages, building facades, large ground washes. At A5 scale covers most of the painting with a single brush.</td>
+        <td class="col-note">Largest in sable travel set; first brush on paper in most sessions</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Round #6</td>
+        <td class="col-brand">Fuumuui · Sable Travel</td>
+        <td class="col-hair">Kolinsky sable</td>
+        <td class="col-use"><span class="btag btag-detail">detail</span><span class="btag btag-wash">small–mid wash</span> Architectural detail, mid-scale foliage, vehicle bodywork. Fills the gap between #4 and #12.</td>
+        <td class="col-note">Mid-size workhorse in the sable travel set</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Round #4</td>
+        <td class="col-brand">Fuumuui · Sable Travel</td>
+        <td class="col-hair">Kolinsky sable</td>
+        <td class="col-use"><span class="btag btag-detail">fine detail</span> Figures, faces at larger scales, small vehicles, signage, tight architectural detail. At sub-A4 scales functions as a mid-size brush capable of reasonable wash areas.</td>
+        <td class="col-note">Good companion to #12 — small/large pairing covers the full range</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="brush-section-head"><span class="brush-section-sub">Fuumuui — Dual-Tip Travel Set (3 brushes · 6 tips)</span></div>
+  <div class="brush-intro">Synthetic squirrel. Each physical brush has one tip per end. Screw-cap handles with ventilation holes. Softer than sable — higher absorbency, smooth paint release, less snap.</div>
+  <table class="brush-table">
+    <thead><tr><th>Brush</th><th>Paired With</th><th>Hair</th><th>Primary Uses</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="col-brush">Round #10<span class="dual-note">Brush 3 · Tip A</span></td>
+        <td class="col-brand">Pairs with Dagger #8</td>
+        <td class="col-hair">Synthetic squirrel</td>
+        <td class="col-use"><span class="btag btag-wash">mid–large wash</span><span class="btag btag-detail">general</span> Mid-large washes for buildings, skies, grounds. Good for wet-into-wet where softness is an asset.</td>
+        <td class="col-note">More water carry than sable equivalent; less snap</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Dagger #8<span class="dual-note">Brush 3 · Tip B</span></td>
+        <td class="col-brand">Pairs with Round #10</td>
+        <td class="col-hair">Synthetic squirrel</td>
+        <td class="col-use"><span class="btag btag-edge">edges</span><span class="btag btag-detail">mid detail</span><span class="btag btag-wash">small wash</span> Fine tip for windows and detail; diagonal edge for rooflines, tile patterns, foliage. Twist stroke produces tapered marks.</td>
+        <td class="col-note"><span class="flag-verify">⚠ verify</span> Some sets ship cat's tongue, not dagger — inspect tip on arrival</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Round #6<span class="dual-note">Brush 2 · Tip A</span></td>
+        <td class="col-brand">Pairs with Cat's Tongue #4</td>
+        <td class="col-hair">Synthetic squirrel</td>
+        <td class="col-use"><span class="btag btag-detail">general detail</span><span class="btag btag-wash">small–mid wash</span> Secondary architectural elements, figures at A4, tree trunks, vehicle outlines.</td>
+        <td class="col-note">Synthetic squirrel version of a familiar size</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Cat's Tongue #4<span class="dual-note">Brush 2 · Tip B</span></td>
+        <td class="col-brand">Pairs with Round #6</td>
+        <td class="col-hair">Synthetic squirrel</td>
+        <td class="col-use"><span class="btag btag-wash">small wash</span><span class="btag btag-edge">soft edges</span> Oval flat with centre point. Broad sweep with pointed tip. Leaf clusters, curved surfaces, softened foliage and water edges.</td>
+        <td class="col-note">Unique oval stroke resists flat-brush uniformity problem</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Flat #6<span class="dual-note">Brush 1 · Tip A</span></td>
+        <td class="col-brand">Pairs with Detail #2</td>
+        <td class="col-hair">Synthetic squirrel</td>
+        <td class="col-use"><span class="btag btag-wash">flat wash</span><span class="btag btag-edge">crisp edges</span> Clean-edged flat strokes: walls, pavements, large window panes. Corner cuts hard edges without masking fluid.</td>
+        <td class="col-note">Flat stroke character; different from rounds</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Detail #2<span class="dual-note">Brush 1 · Tip B</span></td>
+        <td class="col-brand">Pairs with Flat #6</td>
+        <td class="col-hair">Synthetic squirrel</td>
+        <td class="col-use"><span class="btag btag-detail">fine detail</span> Finest tip in the dual-tip set. Signage, window details, figure faces, small architectural features.</td>
+        <td class="col-note">Reserve for work where sable #4 is too large</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="brush-section-head">Studio Kit <span class="brush-section-sub">Princeton Aqua Elite Series 4850 (13 brushes)</span></div>
+  <div class="brush-intro">Synthetic Kolinsky. Excellent point retention, strong snap, and water-holding close to natural hair. The backbone of the studio collection.</div>
+  <table class="brush-table">
+    <thead><tr><th>Brush</th><th>Brand / Series</th><th>Hair</th><th>Primary Uses</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="col-brush">Long Round #12</td>
+        <td class="col-brand">Princeton Aqua Elite 4850</td>
+        <td class="col-hair">Synthetic Kolinsky</td>
+        <td class="col-use"><span class="btag btag-wash">large wash</span><span class="btag btag-detail">general</span> Primary sky, large architectural facades, ground washes at A3. Long filament belly gives more water capacity than a standard round.</td>
+        <td class="col-note">First brush on paper for large studio work</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Long Round #8</td>
+        <td class="col-brand">Princeton Aqua Elite 4850</td>
+        <td class="col-hair">Synthetic Kolinsky</td>
+        <td class="col-use"><span class="btag btag-wash">mid wash</span><span class="btag btag-detail">general</span> Buildings, tree masses, shadow fills. Workhorse mid-size round.</td>
+        <td class="col-note">Paired with #12 covers most of the studio painting range</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Round #10</td>
+        <td class="col-brand">Princeton Aqua Elite 4850</td>
+        <td class="col-hair">Synthetic Kolinsky</td>
+        <td class="col-use"><span class="btag btag-wash">mid wash</span><span class="btag btag-detail">general</span> Slightly shorter belly than long round. General mid-scale passage work.</td>
+        <td class="col-note">Standard round proportion vs. extended long round</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Round #6</td>
+        <td class="col-brand">Princeton Aqua Elite 4850</td>
+        <td class="col-hair">Synthetic Kolinsky</td>
+        <td class="col-use"><span class="btag btag-detail">detail</span><span class="btag btag-wash">small–mid wash</span> Architectural detail, figures, foliage structure.</td>
+        <td class="col-note"></td>
+      </tr>
+      <tr>
+        <td class="col-brush">Round #4</td>
+        <td class="col-brand">Princeton Aqua Elite 4850</td>
+        <td class="col-hair">Synthetic Kolinsky</td>
+        <td class="col-use"><span class="btag btag-detail">fine detail</span> Fine architectural work, figures at smaller scales, window detail, tight linework with a wet tip.</td>
+        <td class="col-note">Finest standard round in the Aqua Elite set</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Quill #6</td>
+        <td class="col-brand">Princeton Aqua Elite 4850</td>
+        <td class="col-hair">Synthetic Kolinsky</td>
+        <td class="col-use"><span class="btag btag-quill">quill wash</span><span class="btag btag-edge">soft edges</span> Large belly with fine point. Organic subjects, loose foliage, water passages, wet-into-wet where a round would drag.</td>
+        <td class="col-note">More paint volume than equivalent round number</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Half-Inch Stroke</td>
+        <td class="col-brand">Princeton Aqua Elite 4850</td>
+        <td class="col-hair">Synthetic Kolinsky</td>
+        <td class="col-use"><span class="btag btag-wash">flat wash</span><span class="btag btag-edge">crisp edges</span> Ruled architectural strokes, flat wall passages, pavements, sky bands. Sharp corner cuts hard edges.</td>
+        <td class="col-note">Flat shape; different stroke character from rounds</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Half-Inch Oval Wash</td>
+        <td class="col-brand">Princeton Aqua Elite 4850</td>
+        <td class="col-hair">Synthetic Kolinsky</td>
+        <td class="col-use"><span class="btag btag-wash">large wash</span><span class="btag btag-edge">soft edges</span> Smooth, even coverage for large backgrounds. Softer edge than the stroke flat.</td>
+        <td class="col-note">Best for large even washes where brush marks must be invisible</td>
+      </tr>
+      <tr>
+        <td class="col-brush">3/8-Inch Dagger</td>
+        <td class="col-brand">Princeton Aqua Elite 4850</td>
+        <td class="col-hair">Synthetic Kolinsky</td>
+        <td class="col-use"><span class="btag btag-edge">edges</span><span class="btag btag-detail">calligraphic</span> Rooflines, tile patterns, directional foliage, tapering strokes. Twist and pull for variable-width marks.</td>
+        <td class="col-note">More controlled than the Fuumuui dagger — better snap</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Half-Inch Angular Shader</td>
+        <td class="col-brand">Princeton Aqua Elite 4850</td>
+        <td class="col-hair">Synthetic Kolinsky</td>
+        <td class="col-use"><span class="btag btag-edge">angled edges</span><span class="btag btag-wash">small–mid wash</span> Shadow fills in corners, under eaves. Graded washes in tight spaces. Crisp angled edges on architectural forms.</td>
+        <td class="col-note"></td>
+      </tr>
+      <tr>
+        <td class="col-brush">Quarter-Inch Angular</td>
+        <td class="col-brand">Princeton Aqua Elite 4850</td>
+        <td class="col-hair">Synthetic Kolinsky</td>
+        <td class="col-use"><span class="btag btag-edge">fine angled</span><span class="btag btag-detail">detail</span> Tight angled work: window sills, shadow lines, small architectural accents. Smaller and more precise than the half-inch angular.</td>
+        <td class="col-note"></td>
+      </tr>
+      <tr>
+        <td class="col-brush">Rigger #8</td>
+        <td class="col-brand">Princeton Aqua Elite 4850</td>
+        <td class="col-hair">Synthetic Kolinsky</td>
+        <td class="col-use"><span class="btag btag-line">linework</span> Long thin hair for continuous lines: cables, mullions, grille details, rigging, fine branches, lettering.</td>
+        <td class="col-note">#8 rigger is relatively coarse — fine architectural linework may want a #2 or #4 as backup</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Round Shader #4</td>
+        <td class="col-brand">Princeton Aqua Elite 4850</td>
+        <td class="col-hair">Synthetic Kolinsky</td>
+        <td class="col-use"><span class="btag btag-detail">shading</span><span class="btag btag-wash">small wash</span> Short, controlled round for blending and shading small areas. Softer application than a standard round of equivalent size.</td>
+        <td class="col-note">Distinct stroke character from standard round #4</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="brush-section-head"><span class="brush-section-sub">Quills — Natural &amp; Synthetic (6 brushes)</span></div>
+  <div class="brush-intro">Quill-mounted brushes have no ferrule. Large rounded belly with fine point. The collection spans four series and two quill sizes from Cheap Joe's Skippers to Princeton Neptune to Tintoretto.</div>
+  <table class="brush-table">
+    <thead><tr><th>Brush</th><th>Brand / Series</th><th>Hair</th><th>Primary Uses</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="col-brush">Quill #4</td>
+        <td class="col-brand">Princeton Neptune</td>
+        <td class="col-hair">Synthetic squirrel</td>
+        <td class="col-use"><span class="btag btag-quill">quill wash</span><span class="btag btag-edge">soft edges</span> Smaller quill for detail-scale loose work. Foliage, water texture, wet-into-wet at smaller scales.</td>
+        <td class="col-note">Pairs with Aqua Elite Quill #6 — smaller of the Neptune pair</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Quill #8</td>
+        <td class="col-brand">Princeton Neptune</td>
+        <td class="col-hair">Synthetic squirrel</td>
+        <td class="col-use"><span class="btag btag-quill">quill wash</span><span class="btag btag-edge">soft edges</span> Mid-size quill for organic washes — foliage masses, sky passages, water surfaces. Excellent wet-into-wet behavior.</td>
+        <td class="col-note">Core mid-size quill; softer and rounder than equivalent round number</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Quill #12<br><span style="font-size:9px;color:var(--muted)">Series 1407</span></td>
+        <td class="col-brand">Tintoretto</td>
+        <td class="col-hair">Natural squirrel</td>
+        <td class="col-use"><span class="btag btag-quill">large quill wash</span><span class="btag btag-wash">large wash</span> Large atmospheric wash, loose sky passages, wet-into-wet. Natural squirrel — softer and more absorbent than synthetic.</td>
+        <td class="col-note">Natural squirrel; premium end of the quill collection</td>
+      </tr>
+      <tr>
+        <td class="col-brush">AccuSoft Quill #10<br><span style="font-size:9px;color:var(--muted)">Series 1412</span></td>
+        <td class="col-brand">Tintoretto</td>
+        <td class="col-hair">Synthetic soft</td>
+        <td class="col-use"><span class="btag btag-quill">quill wash</span><span class="btag btag-edge">soft edges</span> Mid-large quill. AccuSoft synthetic approximates squirrel behavior with more consistent tip performance.</td>
+        <td class="col-note">Synthetic version; pairs with the natural 1407 Series</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Skipper #1</td>
+        <td class="col-brand">Cheap Joe's</td>
+        <td class="col-hair">Natural squirrel</td>
+        <td class="col-use"><span class="btag btag-quill">quill wash</span><span class="btag btag-wash">large wet</span> Maximum water delivery. Large wet backgrounds, open sky washes. Largest quill in the collection.</td>
+        <td class="col-note">Use where maximum water volume matters; largest tool in the collection</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Skipper #2</td>
+        <td class="col-brand">Cheap Joe's</td>
+        <td class="col-hair">Natural squirrel</td>
+        <td class="col-use"><span class="btag btag-quill">quill wash</span><span class="btag btag-edge">soft edges</span> Slightly smaller than Skipper #1. Large natural squirrel quill for loose atmospheric work.</td>
+        <td class="col-note">Pairs with Skipper #1 — together the largest water-delivery tools in the collection</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="brush-section-head"><span class="brush-section-sub">Mid-Tier Rounds (3 brushes)</span></div>
+  <div class="brush-intro">Student-to-mid quality range. Useful as backup rounds or for work where premium snap is not required.</div>
+  <table class="brush-table">
+    <thead><tr><th>Brush</th><th>Brand / Series</th><th>Hair</th><th>Primary Uses</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="col-brush">Round #12</td>
+        <td class="col-brand">Princeton Lauren</td>
+        <td class="col-hair">Synthetic</td>
+        <td class="col-use"><span class="btag btag-wash">large wash</span> Backup large round. General studio washes when premium brushes are reserved.</td>
+        <td class="col-note">Student-grade relative to Aqua Elite; lower snap and less precise point</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Round #8</td>
+        <td class="col-brand">Princeton Velvet Touch</td>
+        <td class="col-hair">Synthetic squirrel</td>
+        <td class="col-use"><span class="btag btag-wash">mid wash</span><span class="btag btag-edge">soft edges</span> Wet-into-wet foliage, loose passage work where softness is preferred over snap.</td>
+        <td class="col-note">Softer than Aqua Elite — intentionally different character, not a direct substitute</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Round #6</td>
+        <td class="col-brand">da Vinci</td>
+        <td class="col-hair"><span class="flag-verify-blue">verify series</span> Maestro = Kolinsky / Cosmotop Spin = synthetic squirrel</td>
+        <td class="col-use"><span class="btag btag-detail">detail</span><span class="btag btag-wash">small–mid wash</span> Mid-size round. Character depends heavily on which da Vinci series — Maestro behaves like premium sable; Cosmotop Spin like a soft synthetic squirrel.</td>
+        <td class="col-note">Confirm series before relying on snap/water-holding assumptions</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="brush-section-head"><span class="brush-section-sub">Flats &amp; Large Wash Brushes (2 brushes)</span></div>
+  <table class="brush-table">
+    <thead><tr><th>Brush</th><th>Brand / Series</th><th>Hair</th><th>Primary Uses</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="col-brush">1-Inch Flat (6150-F)</td>
+        <td class="col-brand">Utrecht</td>
+        <td class="col-hair">Synthetic</td>
+        <td class="col-use"><span class="btag btag-wash">large flat wash</span><span class="btag btag-edge">crisp edges</span> Wide flat strokes for large architectural passages, sky gradations, uniform ground washes. Cuts clean horizontal and vertical edges.</td>
+        <td class="col-note">Reliable flat; good for rapid large-area coverage</td>
+      </tr>
+      <tr>
+        <td class="col-brush">1-Inch Wash</td>
+        <td class="col-brand">Winsor &amp; Newton Cotman</td>
+        <td class="col-hair">Synthetic</td>
+        <td class="col-use"><span class="btag btag-wash">large wet wash</span> Soft large flat for generous wet backgrounds. Less precision than the Utrecht flat but higher water delivery.</td>
+        <td class="col-note">Cotman series — student grade but adequate for large background washes</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="brush-section-head"><span class="brush-section-sub">Specialty — Daggers, Extended Points, Premium Sable (4 brushes)</span></div>
+  <table class="brush-table">
+    <thead><tr><th>Brush</th><th>Brand / Series</th><th>Hair</th><th>Primary Uses</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="col-brush">Half-Inch Dagger</td>
+        <td class="col-brand">Rosemary &amp; Co.</td>
+        <td class="col-hair">Natural sable</td>
+        <td class="col-use"><span class="btag btag-edge">edges</span><span class="btag btag-detail">calligraphic</span> Natural sable dagger — finest mark control in the dagger category. Rooflines, tile detail, variable-width architectural strokes.</td>
+        <td class="col-note">Best dagger in the collection; natural sable outperforms all synthetics for controlled edge work</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Extended Point #8<br><span style="font-size:9px;color:var(--muted)">Series 336</span></td>
+        <td class="col-brand">Rosemary &amp; Co.</td>
+        <td class="col-hair">Natural hair</td>
+        <td class="col-use"><span class="btag btag-line">linework</span><span class="btag btag-detail">fine detail</span> Extended-point round for fine continuous lines: cables, grilles, window mullions, architectural detail. Holds more water mid-stroke than a standard rigger.</td>
+        <td class="col-note">Different from standard rigger — extended point belly</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Series 66 Round #6</td>
+        <td class="col-brand">Rosemary &amp; Co.</td>
+        <td class="col-hair">Kolinsky sable</td>
+        <td class="col-use"><span class="btag btag-detail">detail</span><span class="btag btag-wash">small–mid wash</span> Premium Kolinsky sable round. Best snap and point retention in the mid-size round category. Reserve for high-precision detail work.</td>
+        <td class="col-note">Premium end of the round collection; outperforms all synthetics at this size for controlled marks</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Sablette #6 (800 Series)</td>
+        <td class="col-brand">Utrecht</td>
+        <td class="col-hair">Golden nylon synthetic</td>
+        <td class="col-use"><span class="btag btag-detail">detail</span><span class="btag btag-wash">small wash</span> Golden nylon mid-size round. Firmer than squirrel, less premium than Kolinsky. Good backup or workhorse round.</td>
+        <td class="col-note">Mid-tier synthetic; good where premium brushes are rested</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="brush-section-head"><span class="brush-section-sub">Lifting &amp; Correction Tools (5 brushes)</span></div>
+  <div class="brush-intro">More developed than most painters carry. Covers the full spectrum from gentle lifting to aggressive scrubbing — useful for Zbukvic-style selective edge softening and texture work.</div>
+  <table class="brush-table">
+    <thead><tr><th>Brush</th><th>Brand / Series</th><th>Hair</th><th>Primary Uses</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="col-brush">Medium Eradicator</td>
+        <td class="col-brand">Rosemary &amp; Co.</td>
+        <td class="col-hair">Stiff synthetic</td>
+        <td class="col-use"><span class="btag btag-lift">lifting</span><span class="btag btag-edge">softening</span> Controlled lifting — highlights, cloud edges, texture in passages. More precise than a bristle scrubber.</td>
+        <td class="col-note">Primary lifting tool for controlled corrections</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Shortie Bright #5</td>
+        <td class="col-brand">Creative Mark</td>
+        <td class="col-hair">Stiff synthetic bristle</td>
+        <td class="col-use"><span class="btag btag-lift">scrubbing</span><span class="btag btag-dry">dry brush</span> Aggressive scrubbing of dried passages. Lifting large areas, creating texture in masonry or foliage.</td>
+        <td class="col-note">Larger of the two shortie brights; for broader texture areas</td>
+      </tr>
+      <tr>
+        <td class="col-brush">Shortie Bright #3</td>
+        <td class="col-brand">Creative Mark</td>
+        <td class="col-hair">Stiff synthetic bristle</td>
+        <td class="col-use"><span class="btag btag-lift">scrubbing</span><span class="btag btag-dry">dry brush</span> Smaller shortie bright for more targeted scrubbing — specific texture areas, smaller corrections.</td>
+        <td class="col-note">Precise scrubbed texture or targeted lifting</td>
+      </tr>
+      <tr>
+        <td class="col-brush">209-B Flat #6</td>
+        <td class="col-brand">Utrecht</td>
+        <td class="col-hair">Chungking hog bristle</td>
+        <td class="col-use"><span class="btag btag-lift">scrubbing</span><span class="btag btag-dry">dry brush</span> Most aggressive lifting and scrubbing. Roughening texture, removing dried paint, foliage dry-brush effects.</td>
+        <td class="col-note">Most aggressive scrubber in the collection; natural hog bristle</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="brush-gap-card">
+    <strong>Honest gap analysis</strong> (inventory reviewed April 2026)<br><br>
+    <strong>Soft mop round (mid-size):</strong> No dedicated #8–#10 mop round. The Neptune quills and Tintoretto quills partially cover this role, but a true mop gives a rounder, fatter mark with different wet-into-wet behavior for organic foliage passages. Not the same tool.<br><br>
+    <strong>Fine rigger:</strong> The Aqua Elite Rigger #8 and Series 336 Extended Point cover linework, but nothing finer. For very fine architectural detail — thin cables, delicate mullions — a #2 or #4 rigger is a materially different instrument.<br><br>
+    <strong>Fan brush:</strong> Absent. Used by some urban sketchers for dry-brush grass and foliage texture. Not essential but notably missing.<br><br>
+    <strong>Overall rating: 8/10</strong> as an intermediate–advanced collection. Strong at the premium ends (Rosemary sable, Tintoretto quills, Cheap Joe's Skippers, Aqua Elite). The mid-tier rounds create uneven quality relative to the premium tools. The quill end is genuinely professional-grade — better than most working watercolorists carry in the studio. For sub-A3 urban sketching, the travel kit likely outperforms the studio kit in day-to-day use.
+  </div>
+</div>
+
+<!-- TAB 13: NEOCOLOR II -->
+<div class="panel" id="tab-neocolor">
+  <h2>Caran d'Ache Neocolor II</h2>
+  <p class="subtitle">Water-soluble wax pastels. Full inventory organized by color family. Can be used dry for texture, dissolved with water for wash effects, or combined wet with watercolor.</p>
+
+  <h3>Yellows, Oranges &amp; Warm Lights</h3>
+  <div class="palette-grid">
+    <div class="swatch"><div class="swatch-color" style="background:#F9E8ED"></div><div class="swatch-info"><div class="swatch-name">Light Peony</div><div class="swatch-brand">warm blush pink</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#FFE600"></div><div class="swatch-info"><div class="swatch-name">Yellow</div><div class="swatch-brand">primary warm yellow</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#FFF5A0"></div><div class="swatch-info"><div class="swatch-name">Pale Yellow</div><div class="swatch-brand">light tint yellow</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#F5D060"></div><div class="swatch-info"><div class="swatch-name">Sahara Yellow</div><div class="swatch-brand">warm golden ochre</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#EED8C0"></div><div class="swatch-info"><div class="swatch-name">Conch Pearl</div><div class="swatch-brand">pale warm neutral</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#F5A060"></div><div class="swatch-info"><div class="swatch-name">Apricot</div><div class="swatch-brand">warm peach-orange</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#F09080"></div><div class="swatch-info"><div class="swatch-name">Salmon</div><div class="swatch-brand">warm pink-orange</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#F07020"></div><div class="swatch-info"><div class="swatch-name">Orange</div><div class="swatch-brand">primary orange</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#E85010"></div><div class="swatch-info"><div class="swatch-name">Fast Orange</div><div class="swatch-brand">vivid warm orange</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#C8A040"></div><div class="swatch-info"><div class="swatch-name">Zinc Ochre</div><div class="swatch-brand">mid yellow ochre</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#B07820"></div><div class="swatch-info"><div class="swatch-name">Ochre</div><div class="swatch-brand">deep earth ochre</div></div></div>
+  </div>
+
+  <h3>Pinks &amp; Reds</h3>
+  <div class="palette-grid">
+    <div class="swatch"><div class="swatch-color" style="background:#F5C0B0"></div><div class="swatch-info"><div class="swatch-name">Peach Blossom</div><div class="swatch-brand">pale peach pink</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#C04060"></div><div class="swatch-info"><div class="swatch-name">Light Wine Red</div><div class="swatch-brand">cool red-wine</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#D03050"></div><div class="swatch-info"><div class="swatch-name">Rose of Garance</div><div class="swatch-brand">mid cool rose</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#D04080"></div><div class="swatch-info"><div class="swatch-name">Tyrian Pink</div><div class="swatch-brand">warm vivid pink</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#D83020"></div><div class="swatch-info"><div class="swatch-name">Vermillion</div><div class="swatch-brand">warm orange-red</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#F04030"></div><div class="swatch-info"><div class="swatch-name">Light Cadmium</div><div class="swatch-brand">vivid warm red</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#C82020"></div><div class="swatch-info"><div class="swatch-name">Scarlet</div><div class="swatch-brand">deep warm red</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#901828"></div><div class="swatch-info"><div class="swatch-name">Alizarin</div><div class="swatch-brand">deep cool crimson</div></div></div>
+  </div>
+
+  <h3>Violets &amp; Purples</h3>
+  <div class="palette-grid">
+    <div class="swatch"><div class="swatch-color" style="background:#D0A8D8"></div><div class="swatch-info"><div class="swatch-name">Light Heliotrope</div><div class="swatch-brand">pale lavender</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#C0A0C8"></div><div class="swatch-info"><div class="swatch-name">Light Lilac</div><div class="swatch-brand">soft lilac</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#8050A8"></div><div class="swatch-info"><div class="swatch-name">Purple Violet</div><div class="swatch-brand">mid violet-purple</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#702090"></div><div class="swatch-info"><div class="swatch-name">Purple</div><div class="swatch-brand">deep purple</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#8080C0"></div><div class="swatch-info"><div class="swatch-name">Periwinkle</div><div class="swatch-brand">blue-violet</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#A070B8"></div><div class="swatch-info"><div class="swatch-name">Violet Lilac</div><div class="swatch-brand">warm violet</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#501858"></div><div class="swatch-info"><div class="swatch-name">Aubergine</div><div class="swatch-brand">deep red-purple</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#601828"></div><div class="swatch-info"><div class="swatch-name">Dark Garnet</div><div class="swatch-brand">deep red-maroon</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#602830"></div><div class="swatch-info"><div class="swatch-name">Caput Mortuum</div><div class="swatch-brand">dark iron oxide red</div></div></div>
+  </div>
+
+  <h3>Blues</h3>
+  <div class="palette-grid">
+    <div class="swatch"><div class="swatch-color" style="background:#D0E8F8"></div><div class="swatch-info"><div class="swatch-name">Cobalt Blue 5%</div><div class="swatch-brand">near-white tint blue</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#40C8C8"></div><div class="swatch-info"><div class="swatch-name">Turquoise</div><div class="swatch-brand">vivid teal-blue</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#80B8E0"></div><div class="swatch-info"><div class="swatch-name">Sky Blue</div><div class="swatch-brand">light cerulean</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#4070B8"></div><div class="swatch-info"><div class="swatch-name">Cobalt</div><div class="swatch-brand">mid cobalt blue</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#2858A0"></div><div class="swatch-info"><div class="swatch-name">Sapphire</div><div class="swatch-brand">deep cool blue</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#2030A0"></div><div class="swatch-info"><div class="swatch-name">Ultramarine</div><div class="swatch-brand">warm granulating blue</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#102060"></div><div class="swatch-info"><div class="swatch-name">Prussian Blue</div><div class="swatch-brand">deep cold blue-green</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#101830"></div><div class="swatch-info"><div class="swatch-name">Indigo</div><div class="swatch-brand">near-black blue</div></div></div>
+  </div>
+
+  <h3>Greens</h3>
+  <div class="palette-grid">
+    <div class="swatch"><div class="swatch-color" style="background:#50C880"></div><div class="swatch-info"><div class="swatch-name">Chinese Green</div><div class="swatch-brand">bright mid green</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#50A898"></div><div class="swatch-info"><div class="swatch-name">Amazonite</div><div class="swatch-brand">teal-green</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#A8D040"></div><div class="swatch-info"><div class="swatch-name">Lime</div><div class="swatch-brand">yellow-green</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#A09858"></div><div class="swatch-info"><div class="swatch-name">Light Olive 40%</div><div class="swatch-brand">muted warm olive</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#80A830"></div><div class="swatch-info"><div class="swatch-name">Yellow Green</div><div class="swatch-brand">warm mid green</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#507040"></div><div class="swatch-info"><div class="swatch-name">Chromium Oxide Green</div><div class="swatch-brand">muted opaque green</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#308040"></div><div class="swatch-info"><div class="swatch-name">Grass Green</div><div class="swatch-brand">mid natural green</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#208060"></div><div class="swatch-info"><div class="swatch-name">Veronese Green</div><div class="swatch-brand">cool mid green</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#006840"></div><div class="swatch-info"><div class="swatch-name">Phthalo Green</div><div class="swatch-brand">intense staining green</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#006858"></div><div class="swatch-info"><div class="swatch-name">Emerald</div><div class="swatch-brand">vivid cool green</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#184028"></div><div class="swatch-info"><div class="swatch-name">Dark Green</div><div class="swatch-brand">deep forest green</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#405830"></div><div class="swatch-info"><div class="swatch-name">Moss Green</div><div class="swatch-brand">muted warm green</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#604830"></div><div class="swatch-info"><div class="swatch-name">Olive Brown</div><div class="swatch-brand">warm brown-olive</div></div></div>
+  </div>
+
+  <h3>Neutrals, Browns &amp; Darks</h3>
+  <div class="palette-grid">
+    <div class="swatch"><div class="swatch-color" style="background:#905840"></div><div class="swatch-info"><div class="swatch-name">Russet</div><div class="swatch-brand">warm reddish brown</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#904820"></div><div class="swatch-info"><div class="swatch-name">Burnt Sienna</div><div class="swatch-brand">warm transparent earth</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#704030"></div><div class="swatch-info"><div class="swatch-name">Brown</div><div class="swatch-brand">mid warm brown</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#402818"></div><div class="swatch-info"><div class="swatch-name">Van Dyke Brown</div><div class="swatch-brand">deep warm dark brown</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#302018"></div><div class="swatch-info"><div class="swatch-name">Sepia</div><div class="swatch-brand">warm brown-black</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#484858"></div><div class="swatch-info"><div class="swatch-name">Payne's Gray</div><div class="swatch-brand">cool blue-gray dark</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#888888"></div><div class="swatch-info"><div class="swatch-name">Gray</div><div class="swatch-brand">neutral mid gray</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#181818"></div><div class="swatch-info"><div class="swatch-name">Black</div><div class="swatch-brand">full black</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#C8C8C8"></div><div class="swatch-info"><div class="swatch-name">Silver Gray</div><div class="swatch-brand">light neutral gray</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#F5F2EC"></div><div class="swatch-info"><div class="swatch-name">White</div><div class="swatch-brand">opaque white</div></div></div>
+  </div>
+
+  <div class="legend-block">
+    <strong>Working properties:</strong> Neocolor II wax pastels are water-soluble — they can be applied dry for textural marks, then dissolved with a wet brush to create wash effects. They can be layered over dried watercolor or used beneath it. The wax binder means they resist full dissolution; pigment intensity increases with more water and working time.<br><br>
+    <strong>Key uses alongside watercolor:</strong> Texture on dry passages (dry application, not dissolved), resist effects under watercolor washes, final detail accents over dried watercolor (especially lights that can't be lifted), and toned paper work where the wax holds color on the surface rather than soaking in.<br><br>
+    <strong>Lightfastness note:</strong> Most Neocolor II colors are lightfast (ASTM I or II), but a few brighter hues (Light Peony, Tyrian Pink, some fluorescent-influenced colors) have lower ratings. Check individual color specifications for archival work.<br><br>
+    <strong>Total colors: 51</strong> — organized above by family. The set spans a wider chroma range than the watercolor palettes, particularly in the greens and violets.
+  </div>
+</div>
+
+<!-- WHEEL CSS + JS -->
+<style>
+.wheel-wrap { font-family: "Cormorant Garamond", Georgia, serif; color: #ddd8cc; }
+.wheel-wrap *, .wheel-wrap *::before, .wheel-wrap *::after { box-sizing: border-box; }
+.wheel-wrap .filter-bar { padding: 14px 36px; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; flex-direction: column; gap: 10px; background: #161410; }
+.wheel-wrap .filter-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.wheel-wrap .filter-label { font-family: "DM Mono", monospace; font-size: 8.5px; font-weight: 500; color: #6a6560; text-transform: uppercase; letter-spacing: 0.1em; width: 52px; flex-shrink: 0; }
+.wheel-wrap .filter-btn { font-family: "DM Mono", monospace; font-size: 8.5px; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 11px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.14); background: transparent; color: #9a9488; cursor: pointer; transition: all 0.22s; white-space: nowrap; }
+.wheel-wrap .filter-btn:hover { border-color: rgba(255,255,255,0.28); color: #ddd8cc; }
+.wheel-wrap .filter-btn.active { color: #0e0d0b; border-color: transparent; }
+.wheel-wrap .filter-btn[data-palette="P"].active  { background: #c8a84a; }
+.wheel-wrap .filter-btn[data-palette="S"].active  { background: #6a9fc0; }
+.wheel-wrap .filter-btn[data-palette="T"].active  { background: #a07ab0; }
+.wheel-wrap .filter-btn[data-palette="all"].active { background: #5a5650; color: #ddd8cc; }
+.wheel-wrap .filter-btn[data-hue="yellows"].active  { background: #d4c828; color: #111; }
+.wheel-wrap .filter-btn[data-hue="oranges"].active  { background: #c87830; color: #fff; }
+.wheel-wrap .filter-btn[data-hue="reds"].active     { background: #b02828; color: #fff; }
+.wheel-wrap .filter-btn[data-hue="violets"].active  { background: #7848a8; color: #fff; }
+.wheel-wrap .filter-btn[data-hue="blues"].active    { background: #3868b8; color: #fff; }
+.wheel-wrap .filter-btn[data-hue="greens"].active   { background: #2e7848; color: #fff; }
+.wheel-wrap .filter-btn[data-hue="warms"].active    { background: #c87a3a; color: #fff; }
+.wheel-wrap .filter-btn[data-hue="cools"].active    { background: #5a8ab8; color: #fff; }
+.wheel-wrap .filter-btn[data-hue="all"].active      { background: #5a5650; color: #ddd8cc; }
+.wheel-wrap .active-count { font-family: "DM Mono", monospace; font-size: 8px; color: #6a6560; margin-left: auto; letter-spacing: 0.06em; }
+.wheel-wrap .active-count span { color: #c8a84a; font-weight: 500; }
+.wheel-wrap .main { display: flex; flex: 1; min-height: 0; background: #0f0e0c; }
+.wheel-wrap .wheel-panel { flex: 0 0 auto; padding: 32px 20px 32px 36px; display: flex; align-items: flex-start; justify-content: center; }
+.wheel-wrap .wheel-container { position: relative; width: 680px; height: 680px; flex-shrink: 0; }
+.wheel-wrap canvas#wCanvas { position: absolute; top: 0; left: 0; width: 680px; height: 680px; }
+.wheel-wrap .chip { position: absolute; display: flex; align-items: center; gap: 5px; transition: opacity 0.22s; pointer-events: none; }
+.wheel-wrap .chip.active { pointer-events: auto; }
+.wheel-wrap .chip-swatch { width: 11px; height: 11px; border-radius: 2px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.15); }
+.wheel-wrap .chip-label { font-family: "DM Mono", monospace; font-size: 7.5px; font-weight: 300; color: #9a9488; white-space: nowrap; line-height: 1.3; }
+.wheel-wrap .chip-label .name { color: #ddd8cc; font-weight: 400; font-size: 7.8px; }
+.wheel-wrap .chip-label .pal  { font-size: 6.8px; }
+.wheel-wrap .chip.rtl { flex-direction: row-reverse; }
+.wheel-wrap .chip.rtl .chip-label { text-align: right; }
+.wheel-wrap .list-panel { flex: 1; min-width: 240px; max-width: 320px; border-left: 1px solid rgba(255,255,255,0.07); padding: 28px 24px; overflow-y: auto; max-height: 748px; background: #0f0e0c; }
+.wheel-wrap .list-panel h2 { font-size: 11px; font-weight: 300; letter-spacing: 0.12em; text-transform: uppercase; color: #6a6560; margin-bottom: 18px; font-family: "DM Mono", monospace; }
+.wheel-wrap .list-section { margin-bottom: 20px; }
+.wheel-wrap .list-section-title { font-family: "DM Mono", monospace; font-size: 7.5px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: #6a6560; padding-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.07); margin-bottom: 8px; }
+.wheel-wrap .list-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.03); transition: opacity 0.22s; }
+.wheel-wrap .list-item.dimmed { opacity: 0.12; }
+.wheel-wrap .list-swatch { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.12); }
+.wheel-wrap .list-item-info { flex: 1; min-width: 0; }
+.wheel-wrap .list-item-name { font-family: "DM Mono", monospace; font-size: 8px; font-weight: 400; color: #ddd8cc; line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wheel-wrap .list-item-sub { font-family: "DM Mono", monospace; font-size: 7px; color: #6a6560; line-height: 1.3; }
+.wheel-wrap .list-pal-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.wheel-wrap .no-results { font-family: "DM Mono", monospace; font-size: 9px; color: #6a6560; text-align: center; padding: 32px 0; font-style: italic; }
+</style>
+
+<script>
+function showTab(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+(function() {
+  const wheelPanel = document.getElementById('tab-wheel');
+  wheelPanel.innerHTML = `
+<div class="wheel-wrap">
+<div class="filter-bar">
+  <div class="filter-row">
+    <span class="filter-label">Palette</span>
+    <button class="filter-btn active" data-palette="all">All</button>
+    <button class="filter-btn" data-palette="P">Primary</button>
+    <button class="filter-btn" data-palette="S">Secondary</button>
+    <button class="filter-btn" data-palette="T">Tertiary</button>
+  </div>
+  <div class="filter-row">
+    <span class="filter-label">Hue</span>
+    <button class="filter-btn active" data-hue="all">All</button>
+    <button class="filter-btn" data-hue="yellows">Yellows</button>
+    <button class="filter-btn" data-hue="oranges">Oranges</button>
+    <button class="filter-btn" data-hue="reds">Reds</button>
+    <button class="filter-btn" data-hue="violets">Violets</button>
+    <button class="filter-btn" data-hue="blues">Blues</button>
+    <button class="filter-btn" data-hue="greens">Greens</button>
+    <button class="filter-btn" data-hue="warms">Warms</button>
+    <button class="filter-btn" data-hue="cools">Cools</button>
+    <span class="active-count">Showing <span id="wcount">56</span> colors</span>
+  </div>
+</div>
+<div class="main">
+  <div class="wheel-panel">
+    <div class="wheel-container" id="wContainer">
+      <canvas id="wCanvas" width="680" height="680"></canvas>
+    </div>
+  </div>
+  <div class="list-panel" id="wListPanel">
+    <h2>Filtered Colors</h2>
+    <div id="wListContent"></div>
+  </div>
+</div>
+</div>`;
+
+  const COLORS = [
+    { name:"Hansa Yellow Light",       hex:"#F8F058", angleDeg:-5,  palette:"P", pigment:"PY3",            hueZone:"yellows" },
+    { name:"Cadmium Yellow Light",     hex:"#F0C800", angleDeg: 5,  palette:"P", pigment:"PY35",           hueZone:"yellows" },
+    { name:"Hansa Yellow Medium",      hex:"#F4E350", angleDeg: 2,  palette:"S", pigment:"PY97",           hueZone:"yellows" },
+    { name:"Naples Yellow",            hex:"#E8C87A", angleDeg:12,  palette:"S", pigment:"PY35 mix",       hueZone:"yellows" },
+    { name:"Azo Yellow",               hex:"#F5E228", angleDeg:-3,  palette:"T", pigment:"PY74",           hueZone:"yellows" },
+    { name:"Nickel Titanate Yellow",   hex:"#E0C458", angleDeg:10,  palette:"T", pigment:"PY53",           hueZone:"yellows" },
+    { name:"Quinacridone Gold",        hex:"#C89010", angleDeg:28,  palette:"P", pigment:"PO49",           hueZone:"oranges" },
+    { name:"Indian Yellow",            hex:"#DDA520", angleDeg:22,  palette:"S", pigment:"PY153",          hueZone:"oranges" },
+    { name:"Nickel Azo Yellow",        hex:"#C8960C", angleDeg:25,  palette:"S", pigment:"PY150",          hueZone:"oranges" },
+    { name:"Aussie Red Gold",          hex:"#C87830", angleDeg:33,  palette:"T", pigment:"PY42",           hueZone:"oranges" },
+    { name:"Quin Gold Deep",           hex:"#B86808", angleDeg:30,  palette:"T", pigment:"PO49",           hueZone:"oranges" },
+    { name:"Yellow Ochre",             hex:"#C8902A", angleDeg:45,  palette:"P", pigment:"PY43",           hueZone:"oranges" },
+    { name:"Buff Titanium",            hex:"#E0C898", angleDeg:50,  palette:"P", pigment:"PW6:1",          hueZone:"oranges" },
+    { name:"Raw Sienna",               hex:"#B8762A", angleDeg:55,  palette:"S", pigment:"PBr7",           hueZone:"oranges" },
+    { name:"Transparent Orange",       hex:"#D84800", angleDeg:60,  palette:"S", pigment:"PO71",           hueZone:"oranges" },
+    { name:"Burnt Umber",              hex:"#402818", angleDeg:65,  palette:"P", pigment:"PBr7",           hueZone:"oranges" },
+    { name:"Van Dyke Brown",           hex:"#403020", angleDeg:62,  palette:"S", pigment:"PBr7+PBk",       hueZone:"oranges" },
+    { name:"Bloodstone Genuine",       hex:"#604838", angleDeg:72,  palette:"P", pigment:"natural mineral", hueZone:"reds"   },
+    { name:"Burnt Sienna",             hex:"#904820", angleDeg:68,  palette:"P", pigment:"PBr7",           hueZone:"oranges" },
+    { name:"Cadmium Red Medium",       hex:"#D83020", angleDeg:75,  palette:"P", pigment:"PR108",          hueZone:"reds"   },
+    { name:"Pyrrol Scarlet",           hex:"#E03020", angleDeg:80,  palette:"S", pigment:"PR255",          hueZone:"reds"   },
+    { name:"English Venetian Red",     hex:"#903828", angleDeg:85,  palette:"P", pigment:"PR101",          hueZone:"reds"   },
+    { name:"Alizarin Crimson",         hex:"#A01828", angleDeg:105, palette:"P", pigment:"PR83",           hueZone:"reds"   },
+    { name:"Pyrrol Crimson",           hex:"#B01828", angleDeg:112, palette:"S", pigment:"PR264",          hueZone:"reds"   },
+    { name:"Perylene Maroon",          hex:"#702040", angleDeg:118, palette:"S", pigment:"PR179",          hueZone:"reds"   },
+    { name:"Opera Pink",               hex:"#F060A0", angleDeg:130, palette:"T", pigment:"PR122+fluor",    hueZone:"reds"   },
+    { name:"Rose Madder",              hex:"#C05870", angleDeg:133, palette:"T", pigment:"NR9",            hueZone:"reds"   },
+    { name:"Quinacridone Rose",        hex:"#E05878", angleDeg:140, palette:"P", pigment:"PV19",           hueZone:"reds"   },
+    { name:"Quinacridone Magenta",     hex:"#C03060", angleDeg:148, palette:"S", pigment:"PR122",          hueZone:"violets"},
+    { name:"Potter's Pink",            hex:"#C89070", angleDeg:155, palette:"S", pigment:"PR233",          hueZone:"reds"   },
+    { name:"Carbazole Violet",         hex:"#6040A0", angleDeg:172, palette:"S", pigment:"PV23",           hueZone:"violets"},
+    { name:"Lavender",                 hex:"#B8A8D0", angleDeg:178, palette:"S", pigment:"mix",            hueZone:"violets"},
+    { name:"Imperial Purple",          hex:"#503090", angleDeg:183, palette:"T", pigment:"premix",         hueZone:"violets"},
+    { name:"French Ultramarine",       hex:"#283898", angleDeg:200, palette:"P", pigment:"PB29",           hueZone:"blues"  },
+    { name:"Indanthrone Blue",         hex:"#284888", angleDeg:210, palette:"S", pigment:"PB60",           hueZone:"blues"  },
+    { name:"Indigo",                   hex:"#182848", angleDeg:215, palette:"S", pigment:"PB60+PBk6",      hueZone:"blues"  },
+    { name:"Lunar Blue",               hex:"#2A3858", angleDeg:205, palette:"T", pigment:"PBk11+PB29",     hueZone:"blues"  },
+    { name:"Moonglow",                 hex:"#506880", angleDeg:220, palette:"T", pigment:"PB29+PV19+PBk11",hueZone:"blues"  },
+    { name:"Cobalt Blue Light",        hex:"#5888C8", angleDeg:228, palette:"P", pigment:"PB28",           hueZone:"blues"  },
+    { name:"Cerulean Blue Chromium",   hex:"#4870A8", angleDeg:235, palette:"S", pigment:"PB36",           hueZone:"blues"  },
+    { name:"Cerulean Blue",            hex:"#6898C8", angleDeg:242, palette:"S", pigment:"PB35",           hueZone:"blues"  },
+    { name:"Phthalo Blue RS",          hex:"#203858", angleDeg:248, palette:"S", pigment:"PB15:6",         hueZone:"blues"  },
+    { name:"Payne's Gray",             hex:"#3C4450", angleDeg:255, palette:"S", pigment:"PB15+PBk",       hueZone:"blues"  },
+    { name:"Lunar Black",              hex:"#1C1C20", angleDeg:252, palette:"S", pigment:"PBk11",          hueZone:"blues"  },
+    { name:"Phthalo Turquoise",        hex:"#008898", angleDeg:268, palette:"P", pigment:"PB16",           hueZone:"blues"  },
+    { name:"Cobalt Teal",              hex:"#00A8B8", angleDeg:275, palette:"P", pigment:"PB36+PG50",      hueZone:"greens" },
+    { name:"Manganese Blue",           hex:"#38A8C8", angleDeg:262, palette:"T", pigment:"PB33 hue",       hueZone:"blues"  },
+    { name:"Cascade",                  hex:"#486878", angleDeg:280, palette:"T", pigment:"PB29+PB36+PG26", hueZone:"greens" },
+    { name:"Peacock Blue",             hex:"#007890", angleDeg:272, palette:"T", pigment:"PB15+PG7",       hueZone:"blues"  },
+    { name:"Phthalo Green BS",         hex:"#006840", angleDeg:293, palette:"P", pigment:"PG7",            hueZone:"greens" },
+    { name:"Undersea Green",           hex:"#386050", angleDeg:300, palette:"P", pigment:"PG26+PBr7",      hueZone:"greens" },
+    { name:"Viridian",                 hex:"#286040", angleDeg:307, palette:"S", pigment:"PG18",           hueZone:"greens" },
+    { name:"Perylene Green",           hex:"#183020", angleDeg:298, palette:"S", pigment:"PBk31",          hueZone:"greens" },
+    { name:"Green Gold",               hex:"#608030", angleDeg:318, palette:"S", pigment:"PY129",          hueZone:"greens" },
+    { name:"Diopside Genuine",         hex:"#587860", angleDeg:308, palette:"T", pigment:"natural mineral", hueZone:"greens"},
+    { name:"Serpentine Genuine",       hex:"#788060", angleDeg:322, palette:"T", pigment:"natural mineral", hueZone:"greens"},
+  ];
+
+  const PAL_COLORS_CSS = { P:"#c8a84a", S:"#6a9fc0", T:"#a07ab0" };
+  const PAL_NAMES = { P:"Primary", S:"Secondary", T:"Tertiary" };
+  const ZONE_ORDER = ["yellows","oranges","reds","violets","blues","greens"];
+  const ZONE_LABELS = {yellows:"Yellows",oranges:"Oranges",reds:"Reds",violets:"Violets",blues:"Blues",greens:"Greens"};
+
+  function toRad(deg) { return (deg - 90) * Math.PI / 180; }
+  function isWarm(deg) { const d = ((deg % 360) + 360) % 360; return d < 180; }
+  function matchesPal(c, pal) { return pal === "all" || c.palette === pal; }
+  function matchesHue(c, hue) {
+    if (hue === "all") return true;
+    if (hue === "warms") return isWarm(c.angleDeg);
+    if (hue === "cools") return !isWarm(c.angleDeg);
+    return c.hueZone === hue;
+  }
+
+  let activePalette = "all", activeHue = "all";
+  const canvas = document.getElementById('wCanvas');
+  const ctx = canvas.getContext('2d');
+  const CX = 340, CY = 340, OUTER = 122, INNER = 66;
+
+  function drawWheel() {
+    ctx.clearRect(0, 0, 680, 680);
+    for (let i = 0; i < 360; i++) {
+      const s = (i/360)*2*Math.PI - Math.PI/2;
+      const e = ((i+1)/360)*2*Math.PI - Math.PI/2;
+      const hue = (60 - (i/360)*360 + 720) % 360;
+      const g = ctx.createRadialGradient(CX,CY,INNER,CX,CY,OUTER);
+      g.addColorStop(0,`hsla(${hue},60%,75%,0.88)`);
+      g.addColorStop(1,`hsla(${hue},86%,40%,0.88)`);
+      ctx.beginPath();
+      ctx.moveTo(CX+INNER*Math.cos(s),CY+INNER*Math.sin(s));
+      ctx.arc(CX,CY,OUTER,s,e);
+      ctx.arc(CX,CY,INNER,e,s,true);
+      ctx.closePath();
+      ctx.fillStyle = g; ctx.fill();
+    }
+    ctx.beginPath(); ctx.arc(CX,CY,INNER,0,2*Math.PI);
+    ctx.fillStyle='#0f0e0c'; ctx.fill();
+    [INNER,OUTER].forEach(r=>{
+      ctx.beginPath(); ctx.arc(CX,CY,r,0,2*Math.PI);
+      ctx.strokeStyle='rgba(255,255,255,0.07)'; ctx.lineWidth=1; ctx.stroke();
+    });
+    const LABELS=[
+      {l:"Yellow",d:0,p:true},{l:"Yellow-Orange",d:30,p:false},
+      {l:"Orange",d:60,s:true},{l:"Red-Orange",d:90,p:false},
+      {l:"Red",d:120,p:true},{l:"Red-Violet",d:150,p:false},
+      {l:"Violet",d:180,s:true},{l:"Blue-Violet",d:210,p:false},
+      {l:"Blue",d:240,p:true},{l:"Blue-Green",d:270,p:false},
+      {l:"Green",d:300,s:true},{l:"Yellow-Green",d:330,p:false},
+    ];
+    const LR = OUTER+18;
+    LABELS.forEach(({l,d,p,s})=>{
+      const r=toRad(d);
+      ctx.beginPath();
+      ctx.moveTo(CX+(OUTER+1)*Math.cos(r),CY+(OUTER+1)*Math.sin(r));
+      ctx.lineTo(CX+(OUTER+8)*Math.cos(r),CY+(OUTER+8)*Math.sin(r));
+      ctx.strokeStyle=p?'rgba(255,255,255,0.35)':s?'rgba(255,255,255,0.22)':'rgba(255,255,255,0.12)';
+      ctx.lineWidth=p?1.5:1; ctx.stroke();
+      const x=CX+LR*Math.cos(r), y=CY+LR*Math.sin(r);
+      ctx.save(); ctx.translate(x,y); ctx.rotate(r+Math.PI/2);
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.font=p?"500 10px 'Cormorant Garamond',serif":s?"400 9.5px 'Cormorant Garamond',serif":"300 8.5px 'Cormorant Garamond',serif";
+      ctx.fillStyle=p?'#d6c89a':s?'#a09880':'#6a6458';
+      ctx.fillText(l,0,0); ctx.restore();
+    });
+    const DR=OUTER-10;
+    COLORS.forEach(c=>{
+      const active = matchesPal(c,activePalette) && matchesHue(c,activeHue);
+      const r=toRad(c.angleDeg);
+      ctx.beginPath(); ctx.arc(CX+DR*Math.cos(r),CY+DR*Math.sin(r),active?4:2.5,0,2*Math.PI);
+      ctx.fillStyle=active?c.hex:'rgba(120,115,108,0.3)'; ctx.fill();
+      if(active){ctx.strokeStyle='rgba(255,255,255,0.4)';ctx.lineWidth=0.8;ctx.stroke();}
+    });
+  }
+
+  function buildChips() {
+    const container = document.getElementById('wContainer');
+    container.querySelectorAll('.chip').forEach(e=>e.remove());
+    const sorted = [...COLORS].sort((a,b)=>{
+      const da=((a.angleDeg%360)+360)%360, db=((b.angleDeg%360)+360)%360;
+      return da-db;
+    });
+    const sectors={};
+    sorted.forEach(c=>{
+      const d=((c.angleDeg%360)+360)%360;
+      const s=Math.floor(d/30);
+      if(!sectors[s])sectors[s]=[];
+      sectors[s].push(c);
+    });
+    Object.entries(sectors).forEach(([,group])=>{
+      group.forEach((c,i)=>{
+        const r=toRad(c.angleDeg);
+        const orbit=176+i*17;
+        const cx2=CX+orbit*Math.cos(r), cy2=CY+orbit*Math.sin(r);
+        const isLeft=cx2<CX;
+        const chip=document.createElement('div');
+        chip.className='chip'+(isLeft?' rtl':'');
+        chip.dataset.palette=c.palette; chip.dataset.hue=c.hueZone; chip.dataset.angle=c.angleDeg;
+        const sw=document.createElement('div'); sw.className='chip-swatch'; sw.style.background=c.hex;
+        const lb=document.createElement('div'); lb.className='chip-label';
+        lb.innerHTML=`<span class="name">${c.name}</span><br><span class="pal" style="color:${PAL_COLORS_CSS[c.palette]}">${PAL_NAMES[c.palette]}</span>`;
+        chip.appendChild(sw); chip.appendChild(lb);
+        const cw=138,ch=26;
+        chip.style.width=cw+'px';
+        chip.style.left=(isLeft?cx2-cw:cx2)+'px';
+        chip.style.top=(cy2-ch/2)+'px';
+        container.appendChild(chip);
+      });
+    });
+  }
+
+  function updateChips() {
+    document.querySelectorAll('#wContainer .chip').forEach(chip=>{
+      const pm=activePalette==="all"||chip.dataset.palette===activePalette;
+      const hm=matchesHue({hueZone:chip.dataset.hue,angleDeg:parseFloat(chip.dataset.angle)},activeHue);
+      const active=pm&&hm;
+      chip.style.opacity=active?'1':'0.1';
+      chip.classList.toggle('active',active);
+    });
+  }
+
+  function buildList() {
+    const lc=document.getElementById('wListContent');
+    lc.innerHTML='';
+    const active=COLORS.filter(c=>matchesPal(c,activePalette)&&matchesHue(c,activeHue));
+    document.getElementById('wcount').textContent=active.length;
+    if(!active.length){lc.innerHTML='<div class="no-results">No colors match.</div>';return;}
+    const grouped={};
+    active.forEach(c=>{if(!grouped[c.hueZone])grouped[c.hueZone]=[];grouped[c.hueZone].push(c);});
+    ZONE_ORDER.forEach(zone=>{
+      if(!grouped[zone]||!grouped[zone].length)return;
+      const sec=document.createElement('div'); sec.className='list-section';
+      const title=document.createElement('div'); title.className='list-section-title'; title.textContent=ZONE_LABELS[zone];
+      sec.appendChild(title);
+      grouped[zone].forEach(c=>{
+        const item=document.createElement('div'); item.className='list-item';
+        const sw=document.createElement('div'); sw.className='list-swatch'; sw.style.background=c.hex;
+        const info=document.createElement('div'); info.className='list-item-info';
+        info.innerHTML=`<div class="list-item-name">${c.name}</div><div class="list-item-sub">${c.pigment}</div>`;
+        const dot=document.createElement('div'); dot.className='list-pal-dot'; dot.style.background=PAL_COLORS_CSS[c.palette];
+        item.appendChild(sw); item.appendChild(info); item.appendChild(dot);
+        sec.appendChild(item);
+      });
+      lc.appendChild(sec);
+    });
+  }
+
+  function update() { drawWheel(); updateChips(); buildList(); }
+
+  wheelPanel.addEventListener('click', function(e) {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    const pal = btn.dataset.palette;
+    const hue = btn.dataset.hue;
+    if (pal !== undefined) {
+      wheelPanel.querySelectorAll('.filter-btn[data-palette]').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      activePalette = pal;
+      update();
+    }
+    if (hue !== undefined) {
+      wheelPanel.querySelectorAll('.filter-btn[data-hue]').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      activeHue = hue;
+      update();
+    }
+  });
+
+  let wheelInitialized = false;
+  const observer = new MutationObserver(() => {
+    const panel = document.getElementById('tab-wheel');
+    if (panel && panel.classList.contains('active') && !wheelInitialized) {
+      wheelInitialized = true;
+      buildChips();
+      update();
+    }
+  });
+  observer.observe(document.getElementById('tab-wheel'), { attributes: true, attributeFilter: ['class'] });
+})();
+</script>
+</body>
+</html>
